@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String          @id @default(cuid())
+  name                 String
+  email                String          @unique
+  image                String?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  password             String
+  resetToken           String?         @unique
+  resetTokenExpiry     DateTime?
+  isAdmin              Boolean         @default(false)
+  isDeleted            Boolean         @default(false)
+  deletedAt            DateTime?
+  hostedSessions       GameSession[]   @relation("host")
+  playerSessions       PlayerSession[]
+  settlementsToPay     Settlement[]    @relation("payer")
+  settlementsToReceive Settlement[]    @relation("receiver")
+  transactions         Transaction[]
+}
+
+model GameSession {
+  id           String          @id @default(cuid())
+  date         DateTime
+  location     String?
+  gameType     String?         @default("No Limit Hold'em")
+  status       SessionStatus   @default(ONGOING)
+  buyIn        Float
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  hostId       String
+  sessionCost  Float?
+  host         User            @relation("host", fields: [hostId], references: [id])
+  participants PlayerSession[]
+  settlements  Settlement[]
+  transactions Transaction[]
+
+  @@index([hostId])
+}
+
+model PlayerSession {
+  id           String              @id @default(cuid())
+  joinedAt     DateTime            @default(now())
+  leftAt       DateTime?
+  initialBuyIn Float
+  currentStack Float
+  status       PlayerSessionStatus @default(ACTIVE)
+  userId       String
+  sessionId    String
+  session      GameSession         @relation(fields: [sessionId], references: [id])
+  user         User                @relation(fields: [userId], references: [id])
+  transactions Transaction[]
+
+  @@index([userId])
+  @@index([sessionId])
+}
+
+model Transaction {
+  id              String          @id @default(cuid())
+  amount          Float
+  type            TransactionType
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  userId          String
+  sessionId       String
+  note            String?
+  playerSessionId String?
+  playerSession   PlayerSession?  @relation(fields: [playerSessionId], references: [id])
+  session         GameSession     @relation(fields: [sessionId], references: [id])
+  user            User            @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([sessionId])
+  @@index([playerSessionId])
+}
+
+model Settlement {
+  id         String           @id @default(cuid())
+  amount     Float
+  status     SettlementStatus @default(PENDING)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  sessionId  String
+  payerId    String
+  receiverId String
+  payer      User             @relation("payer", fields: [payerId], references: [id])
+  receiver   User             @relation("receiver", fields: [receiverId], references: [id])
+  session    GameSession      @relation(fields: [sessionId], references: [id])
+
+  @@index([sessionId])
+  @@index([payerId])
+  @@index([receiverId])
+}
+
+enum SessionStatus {
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum TransactionType {
+  BUY_IN
+  CASH_OUT
+  REBUY
+  ADD_CHIPS
+  REMOVE_CHIPS
+}
+
+enum SettlementStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum PlayerSessionStatus {
+  ACTIVE
+  CASHED_OUT
+  BUSTED
+}
