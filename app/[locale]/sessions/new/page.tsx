@@ -2,13 +2,13 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import CreateGameSession from '@/app/components/CreateGameSession';
+import CreateGameSession from '@/app/[locale]/components/CreateGameSession';
 
 export default async function NewGameSessionPage() {
     const session = await getServerSession(authOptions);
 
     if (!session?.user) {
-        redirect('/auth/signin');
+        redirect('/en/auth/signin');
     }
 
     // Fetch all users for the player selection

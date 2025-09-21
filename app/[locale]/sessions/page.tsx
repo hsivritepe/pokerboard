@@ -10,7 +10,7 @@ export default async function SessionsPage() {
     const session = await getServerSession(authOptions);
 
     if (!session?.user) {
-        redirect('/auth/signin');
+        redirect('/en/auth/signin');
     }
 
     // Get the current user with their admin status
@@ -76,7 +76,7 @@ export default async function SessionsPage() {
                         Game Sessions
                     </h1>
                     <Link
-                        href="/sessions/new"
+                        href="new"
                         className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
                     >
                         Create New Session
@@ -88,7 +88,7 @@ export default async function SessionsPage() {
                         {sessions.map((session) => (
                             <li key={session.id}>
                                 <Link
-                                    href={`/sessions/${session.id}`}
+                                    href={`${session.id}`}
                                     className="block hover:bg-gray-50"
                                 >
                                     <div className="px-4 py-4 sm:px-6">
@@ -169,7 +169,7 @@ export default async function SessionsPage() {
                             <li className="px-4 py-8 text-center text-gray-500">
                                 No sessions found.{' '}
                                 <Link
-                                    href="/sessions/new"
+                                    href="new"
                                     className="text-indigo-600 hover:text-indigo-500"
                                 >
                                     Create your first session

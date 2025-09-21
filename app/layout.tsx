@@ -1,13 +1,13 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/components/providers/AuthProvider';
-import { Navigation } from '@/components/Navigation';
 import { ToastProvider } from './components/ui/toast-context';
+import { SimpleNavigation } from '@/components/SimpleNavigation';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-    title: 'PokerBoard - Track Your Home Games',
+    title: 'PokerBoard',
     description:
         'Track and manage your private poker games with ease',
 };
@@ -22,7 +22,7 @@ export default function RootLayout({
             <body className={inter.className}>
                 <AuthProvider>
                     <ToastProvider>
-                        <Navigation />
+                        <SimpleNavigation />
                         {children}
                     </ToastProvider>
                 </AuthProvider>

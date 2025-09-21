@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 type ValidationErrors = {
     email?: string;
@@ -13,6 +14,7 @@ type ValidationErrors = {
 export default function SignIn() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const t = useTranslations();
     const [error, setError] = useState<string | null>(null);
     const [validationErrors, setValidationErrors] =
         useState<ValidationErrors>({});
@@ -45,12 +47,12 @@ export default function SignIn() {
         // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            errors.email = 'Please enter a valid email address';
+            errors.email = t('auth.pleaseEnterValidEmail');
         }
 
         // Password validation
         if (password.length < 1) {
-            errors.password = 'Password is required';
+            errors.password = t('auth.passwordRequired');
         }
 
         setValidationErrors(errors);
@@ -81,7 +83,7 @@ export default function SignIn() {
             });
 
             if (result?.error) {
-                setError('Invalid email or password');
+                setError(t('auth.invalidEmailOrPassword'));
                 setIsLoading(false);
                 return;
             }
@@ -89,9 +91,7 @@ export default function SignIn() {
             router.push('/');
             router.refresh();
         } catch (error) {
-            setError(
-                'An error occurred during sign in. Please try again.'
-            );
+            setError(t('auth.errorDuringSignIn'));
             setIsLoading(false);
         }
     }
@@ -100,15 +100,15 @@ export default function SignIn() {
         <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-                    Sign in to your account
+                    {t('auth.signInToAccount')}
                 </h2>
                 <p className="mt-2 text-center text-sm text-gray-600">
-                    Or{' '}
+                    {t('auth.or')}{' '}
                     <Link
-                        href="/auth/register"
+                        href="/en/auth/register"
                         className="font-medium text-indigo-600 hover:text-indigo-500"
                     >
-                        create a new account
+                        {t('auth.createNewAccount')}
                     </Link>
                 </p>
             </div>
@@ -120,8 +120,12 @@ export default function SignIn() {
                             <div className="text-sm text-green-700">
                                 {searchParams?.get('registered') ===
                                 'true'
-                                    ? 'Account created successfully! Please sign in.'
-                                    : 'Password reset successfully! Please sign in with your new password.'}
+                                    ? t(
+                                          'auth.accountCreatedSuccessfully'
+                                      )
+                                    : t(
+                                          'auth.passwordResetSuccessfully'
+                                      )}
                             </div>
                         </div>
                     )}
@@ -143,7 +147,7 @@ export default function SignIn() {
                                 htmlFor="email"
                                 className="block text-sm font-medium text-gray-700"
                             >
-                                Email address
+                                {t('auth.emailAddress')}
                             </label>
                             <div className="mt-1">
                                 <input
@@ -171,7 +175,7 @@ export default function SignIn() {
                                 htmlFor="password"
                                 className="block text-sm font-medium text-gray-700"
                             >
-                                Password
+                                {t('common.password')}
                             </label>
                             <div className="mt-1">
                                 <input
@@ -194,10 +198,10 @@ export default function SignIn() {
                             </div>
                             <div className="mt-2 text-right">
                                 <Link
-                                    href="/auth/forgot-password"
+                                    href="/en/auth/forgot-password"
                                     className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
                                 >
-                                    Forgot your password?
+                                    {t('auth.forgotPassword')}
                                 </Link>
                             </div>
                         </div>
@@ -209,8 +213,8 @@ export default function SignIn() {
                                 className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isLoading
-                                    ? 'Signing in...'
-                                    : 'Sign in'}
+                                    ? t('common.signingIn')
+                                    : t('common.signIn')}
                             </button>
                         </div>
                     </form>
