@@ -6,11 +6,16 @@ import Link from 'next/link';
 import { formatDistanceToNow, format } from 'date-fns';
 import { Prisma } from '@prisma/client';
 
-export default async function SessionsPage() {
+type Props = {
+    params: Promise<{ locale: string }>;
+};
+
+export default async function SessionsPage({ params }: Props) {
+    const { locale } = await params;
     const session = await getServerSession(authOptions);
 
     if (!session?.user) {
-        redirect('/en/auth/signin');
+        redirect(`/${locale}/auth/signin`);
     }
 
     // Get the current user with their admin status
@@ -88,7 +93,7 @@ export default async function SessionsPage() {
                         {sessions.map((session) => (
                             <li key={session.id}>
                                 <Link
-                                    href={`${session.id}`}
+                                    href={`/${locale}/sessions/${session.id}`}
                                     className="block hover:bg-gray-50"
                                 >
                                     <div className="px-4 py-4 sm:px-6">

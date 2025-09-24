@@ -31,25 +31,220 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-        --card: #0a0a0a;
-        --card-foreground: #ededed;
-        --popover: #0a0a0a;
-        --popover-foreground: #ededed;
-        --primary: #ffffff;
-        --primary-foreground: #0a0a0a;
-        --secondary: #27272a;
-        --secondary-foreground: #f4f4f5;
-        --muted: #27272a;
-        --muted-foreground: #a1a1aa;
-        --accent: #27272a;
-        --accent-foreground: #f4f4f5;
-        --destructive: #7f1d1d;
-        --destructive-foreground: #f4f4f5;
-        --border: #27272a;
-        --input: #27272a;
-        --ring: #f4f4f5;
+        --background: #1a1a1a;
+        --foreground: #e5e5e5;
+        --card: #262626;
+        --card-foreground: #e5e5e5;
+        --popover: #262626;
+        --popover-foreground: #e5e5e5;
+        --primary: #3b82f6;
+        --primary-foreground: #ffffff;
+        --secondary: #404040;
+        --secondary-foreground: #e5e5e5;
+        --muted: #404040;
+        --muted-foreground: #a3a3a3;
+        --accent: #404040;
+        --accent-foreground: #e5e5e5;
+        --destructive: #ef4444;
+        --destructive-foreground: #ffffff;
+        --border: #404040;
+        --input: #404040;
+        --ring: #3b82f6;
+    }
+
+    /* Subtle dark theme overrides for better readability */
+    .bg-white {
+        background-color: var(--card);
+    }
+
+    .bg-gray-50 {
+        background-color: var(--muted);
+    }
+
+    .bg-gray-100 {
+        background-color: var(--secondary);
+    }
+
+    .text-gray-900 {
+        color: var(--foreground);
+    }
+
+    .text-gray-600 {
+        color: var(--muted-foreground);
+    }
+
+    .text-gray-700 {
+        color: var(--foreground);
+    }
+
+    .border-gray-200,
+    .border-gray-300 {
+        border-color: var(--border);
+    }
+
+    /* Enhanced shadows for dark theme */
+    .shadow-md {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4),
+            0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    }
+
+    .shadow-lg {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4),
+            0 4px 6px -2px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Hover states */
+    .hover\\:bg-gray-50:hover {
+        background-color: #404040 !important;
+    }
+
+    /* More specific targeting for sessions page */
+    .bg-white .hover\\:bg-gray-50:hover {
+        background-color: #404040 !important;
+    }
+
+    /* Even more specific - target the exact sessions structure */
+    .bg-white.shadow.overflow-hidden.sm\\:rounded-md
+        ul
+        li
+        a.hover\\:bg-gray-50:hover {
+        background-color: #404040 !important;
+    }
+
+    /* Nuclear option - override Tailwind's bg-gray-50 directly */
+    .bg-gray-50 {
+        background-color: #404040 !important;
+    }
+
+    /* Target any element with hover:bg-gray-50 class */
+    [class*='hover:bg-gray-50']:hover {
+        background-color: #404040 !important;
+    }
+
+    .hover\\:bg-gray-100:hover {
+        background-color: var(--secondary) !important;
+    }
+
+    .hover\\:text-gray-900:hover {
+        color: var(--foreground) !important;
+    }
+
+    /* Form elements */
+    input,
+    textarea,
+    select {
+        background-color: var(--input);
+        color: var(--foreground);
+        border-color: var(--border);
+    }
+
+    /* Links */
+    a {
+        color: var(--primary);
+    }
+
+    a:hover {
+        color: var(--muted-foreground);
+    }
+
+    /* Fix colored background sections for better contrast */
+    .bg-blue-50 {
+        background-color: rgba(59, 130, 246, 0.1);
+    }
+
+    .bg-green-50 {
+        background-color: rgba(34, 197, 94, 0.1);
+    }
+
+    .bg-red-50 {
+        background-color: rgba(239, 68, 68, 0.1);
+    }
+
+    .text-blue-800 {
+        color: #3b82f6;
+    }
+
+    .text-green-800 {
+        color: #22c55e;
+    }
+
+    .text-red-800 {
+        color: #ef4444;
+    }
+
+    /* Ensure numbers in settlement cards are readable */
+    .bg-blue-50 p,
+    .bg-green-50 p,
+    .bg-red-50 p {
+        color: var(--foreground);
+    }
+
+    /* Fix session item hover text readability - more specific selectors */
+    .hover\\:bg-gray-50:hover * {
+        color: var(--foreground) !important;
+    }
+
+    /* Ensure indigo text stays visible on hover */
+    .hover\\:bg-gray-50:hover .text-indigo-600 {
+        color: var(--primary) !important;
+    }
+
+    /* Ensure green status text stays visible on hover */
+    .hover\\:bg-gray-50:hover .text-green-600 {
+        color: #22c55e !important;
+    }
+
+    /* Specific fixes for session list items */
+    .hover\\:bg-gray-50:hover p {
+        color: var(--foreground) !important;
+    }
+
+    .hover\\:bg-gray-50:hover span {
+        color: var(--foreground) !important;
+    }
+
+    /* Target the specific problematic selectors */
+    .bg-white.shadow.overflow-hidden.sm\\:rounded-md
+        ul
+        li
+        a:hover
+        .mt-2.sm\\:flex.sm\\:justify-between
+        .sm\\:flex
+        p {
+        color: var(--foreground) !important;
+    }
+
+    .bg-white.shadow.overflow-hidden.sm\\:rounded-md
+        ul
+        li
+        a:hover
+        .mt-2.flex.items-center.text-sm.text-gray-700.sm\\:mt-0
+        p {
+        color: var(--foreground) !important;
+    }
+
+    .bg-white.shadow.overflow-hidden.sm\\:rounded-md
+        ul
+        li
+        a:hover
+        .flex.items-center.justify-between
+        .flex.flex-col.items-end
+        p.text-sm.text-gray-900 {
+        color: var(--foreground) !important;
+    }
+
+    /* Alternative approach - target by text-gray classes specifically on hover */
+    a:hover .text-gray-600,
+    a:hover .text-gray-700,
+    a:hover .text-gray-900 {
+        color: var(--foreground) !important;
+    }
+
+    /* Even more specific - target the exact classes */
+    .hover\\:bg-gray-50:hover .text-gray-600,
+    .hover\\:bg-gray-50:hover .text-gray-700,
+    .hover\\:bg-gray-50:hover .text-gray-900 {
+        color: var(--foreground) !important;
     }
 }
 
