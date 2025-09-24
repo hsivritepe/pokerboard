@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/app/components/ui/toast-context';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
@@ -49,6 +50,7 @@ export default function SessionSettlement({
 }: SessionSettlementProps) {
     const router = useRouter();
     const { showToast } = useToast();
+    const t = useTranslations();
     const [isLoading, setIsLoading] = useState(false);
     const [sessionCost, setSessionCost] = useState<number | ''>('');
     const [settlementDialogOpen, setSettlementDialogOpen] =
@@ -318,7 +320,9 @@ export default function SessionSettlement({
     return (
         <div className="space-y-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
-                <h2 className="text-lg font-semibold">Settlement</h2>
+                <h2 className="text-lg font-semibold">
+                    {t('settlement.title')}
+                </h2>
                 {(isHost || isAdmin) && (
                     <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                         <div className="flex space-x-2 items-center">
@@ -326,7 +330,7 @@ export default function SessionSettlement({
                                 htmlFor="sessionCost"
                                 className="whitespace-nowrap text-sm"
                             >
-                                Session Cost:
+                                {t('settlement.sessionCost')}:
                             </Label>
                             <div className="relative flex-1">
                                 <span className="absolute inset-y-0 left-0 flex items-center pl-2 text-gray-500">
@@ -357,7 +361,9 @@ export default function SessionSettlement({
                             disabled={isSavingCost}
                             className="h-9 py-0 px-3 text-sm"
                         >
-                            {isSavingCost ? 'Saving...' : 'Save Cost'}
+                            {isSavingCost
+                                ? t('settlement.saving')
+                                : t('settlement.saveCost')}
                         </Button>
                     </div>
                 )}
@@ -370,7 +376,7 @@ export default function SessionSettlement({
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div className="bg-blue-50 p-3 rounded-lg">
                             <h3 className="text-sm font-medium text-blue-800 mb-1">
-                                Total Buy-ins
+                                {t('settlement.totalBuyIns')}
                             </h3>
                             <p className="text-lg font-semibold">
                                 ${totalBuyIns.toString()}
@@ -378,7 +384,7 @@ export default function SessionSettlement({
                         </div>
                         <div className="bg-green-50 p-3 rounded-lg">
                             <h3 className="text-sm font-medium text-green-800 mb-1">
-                                Total Cash Out
+                                {t('settlement.totalCashOut')}
                             </h3>
                             <p className="text-lg font-semibold">
                                 ${totalCashOut.toString()}
@@ -386,7 +392,7 @@ export default function SessionSettlement({
                         </div>
                         <div className="bg-green-50 p-3 rounded-lg">
                             <h3 className="text-sm font-medium text-green-800 mb-1">
-                                Total Profit
+                                {t('settlement.totalProfit')}
                             </h3>
                             <p className="text-lg font-semibold">
                                 ${totalProfit.toString()}
@@ -394,7 +400,7 @@ export default function SessionSettlement({
                         </div>
                         <div className="bg-red-50 p-3 rounded-lg">
                             <h3 className="text-sm font-medium text-red-800 mb-1">
-                                Total Loss
+                                {t('settlement.totalLoss')}
                             </h3>
                             <p className="text-lg font-semibold">
                                 ${totalLoss.toString()}
@@ -405,7 +411,9 @@ export default function SessionSettlement({
                     {lastPlayerCashOut && (
                         <div className="bg-yellow-50 p-4 rounded-lg">
                             <h3 className="text-sm font-medium text-yellow-800 mb-2">
-                                Last Player Cash Out Recommendation
+                                {t(
+                                    'settlement.lastPlayerCashOutRecommendation'
+                                )}
                             </h3>
                             <p className="text-sm">
                                 {lastPlayerCashOut.playerName} should
@@ -453,7 +461,7 @@ export default function SessionSettlement({
                                 onClick={handleSettlementCalculation}
                                 className="w-full sm:w-auto"
                             >
-                                Calculate Settlement
+                                {t('settlement.calculateSettlement')}
                             </Button>
 
                             {sessionCost !== null &&
@@ -467,7 +475,9 @@ export default function SessionSettlement({
                                         }
                                         className="w-full sm:w-auto"
                                     >
-                                        Show Settlement (with cost)
+                                        {t(
+                                            'settlement.showSettlement'
+                                        )}
                                     </Button>
                                 )}
                         </div>
@@ -519,7 +529,7 @@ export default function SessionSettlement({
                                     </div>
                                     <div>
                                         <span className="text-gray-500">
-                                            Cash Out:
+                                            {t('settlement.cashOut')}:
                                         </span>
                                         <span className="font-medium ml-1">
                                             $
@@ -546,19 +556,19 @@ export default function SessionSettlement({
                                         scope="col"
                                         className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
-                                        Total Buy-in
+                                        {t('settlement.totalBuyIns')}
                                     </th>
                                     <th
                                         scope="col"
                                         className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
-                                        Cash Out
+                                        {t('settlement.cashOut')}
                                     </th>
                                     <th
                                         scope="col"
                                         className="px-4 sm:px-6 py-2 sm:py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
-                                        Profit/Loss
+                                        {t('settlement.profitLoss')}
                                     </th>
                                 </tr>
                             </thead>
@@ -613,11 +623,12 @@ export default function SessionSettlement({
                 <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                         <DialogTitle>
-                            Settlement Details (with session cost)
+                            {t('settlement.settlementDetails')}
                         </DialogTitle>
                         <DialogDescription>
-                            Session cost of ${sessionCost.toString()}{' '}
-                            distributed among winners
+                            {t('settlement.sessionCostDistributed', {
+                                amount: `$${sessionCost.toString()}`,
+                            })}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 max-h-[70vh] overflow-y-auto py-4">
@@ -636,7 +647,10 @@ export default function SessionSettlement({
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                                         <div>
                                             <span className="text-gray-500">
-                                                Original:
+                                                {t(
+                                                    'settlement.original'
+                                                )}
+                                                :
                                             </span>
                                             <span
                                                 className={`ml-1 font-medium ${
@@ -659,7 +673,10 @@ export default function SessionSettlement({
                                         {item.costShare > 0 && (
                                             <div>
                                                 <span className="text-gray-500">
-                                                    Session Cost:
+                                                    {t(
+                                                        'settlement.sessionCost'
+                                                    )}
+                                                    :
                                                 </span>
                                                 <span className="ml-1 font-medium text-red-600">
                                                     -$
@@ -669,7 +686,10 @@ export default function SessionSettlement({
                                         )}
                                         <div className="sm:col-span-2">
                                             <span className="text-gray-500">
-                                                Final Amount:
+                                                {t(
+                                                    'settlement.finalAmount'
+                                                )}
+                                                :
                                             </span>
                                             <span
                                                 className={`ml-1 font-medium ${
@@ -701,7 +721,7 @@ export default function SessionSettlement({
                             }
                             className="sm:w-auto"
                         >
-                            Close
+                            {t('settlement.close')}
                         </Button>
                         <Button
                             onClick={handleSaveSettlement}
@@ -709,8 +729,8 @@ export default function SessionSettlement({
                             className="sm:w-auto"
                         >
                             {isLoading
-                                ? 'Saving...'
-                                : 'Save Settlement'}
+                                ? t('settlement.saving')
+                                : t('settlement.saveSettlement')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

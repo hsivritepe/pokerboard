@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { User } from '@prisma/client';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import PlayerActions from './PlayerActions';
 
 interface PlayerSession {
@@ -44,6 +45,7 @@ export default function PlayerManagement({
     minimumBuyIn,
 }: PlayerManagementProps) {
     const router = useRouter();
+    const t = useTranslations();
     const [isAddingPlayer, setIsAddingPlayer] = useState(false);
     const [buyInAmount, setBuyInAmount] = useState(minimumBuyIn);
     const [selectedUserId, setSelectedUserId] = useState('');
@@ -157,28 +159,32 @@ export default function PlayerManagement({
     return (
         <div className="space-y-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
-                <h2 className="text-lg font-semibold">Players</h2>
+                <h2 className="text-lg font-semibold">
+                    {t('playerManagement.players')}
+                </h2>
                 {canManagePlayers && (
                     <button
                         onClick={() => setIsAddingPlayer(true)}
                         className="bg-blue-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base rounded hover:bg-blue-600 transition-colors w-full sm:w-auto"
                         disabled={isAddingPlayer}
                     >
-                        Add Player
+                        {t('playerManagement.addPlayer')}
                     </button>
                 )}
             </div>
 
             {isAddingPlayer && (
                 <div className="bg-gray-50 p-3 sm:p-4 rounded-lg space-y-3 sm:space-y-4">
-                    <h3 className="font-medium">Add New Player</h3>
+                    <h3 className="font-medium">
+                        {t('playerManagement.addNewPlayer')}
+                    </h3>
                     <div className="space-y-3 sm:space-y-4">
                         <div>
                             <label
                                 htmlFor="userId"
                                 className="block text-sm font-medium text-gray-700"
                             >
-                                Select Player
+                                {t('playerManagement.selectPlayer')}
                             </label>
                             <select
                                 id="userId"
@@ -191,8 +197,12 @@ export default function PlayerManagement({
                             >
                                 <option value="">
                                     {isLoadingUsers
-                                        ? 'Loading users...'
-                                        : 'Select a player...'}
+                                        ? t(
+                                              'playerManagement.loadingUsers'
+                                          )
+                                        : t(
+                                              'playerManagement.selectAPlayer'
+                                          )}
                                 </option>
                                 {users.map((user) => (
                                     <option
@@ -209,7 +219,8 @@ export default function PlayerManagement({
                                 htmlFor="buyIn"
                                 className="block text-sm font-medium text-gray-700"
                             >
-                                Buy-in Amount (minimum: $
+                                {t('playerManagement.buyInAmount')} (
+                                {t('playerManagement.minimum')}: $
                                 {minimumBuyIn})
                             </label>
                             <input
@@ -234,7 +245,7 @@ export default function PlayerManagement({
                                 className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 w-full sm:w-auto"
                                 disabled={isLoading}
                             >
-                                Cancel
+                                {t('playerManagement.cancel')}
                             </button>
                             <button
                                 onClick={handleAddPlayer}
@@ -243,7 +254,7 @@ export default function PlayerManagement({
                             >
                                 {isLoading
                                     ? 'Adding...'
-                                    : 'Add Player'}
+                                    : t('playerManagement.addPlayer')}
                             </button>
                         </div>
                         {error && (
@@ -296,16 +307,19 @@ export default function PlayerManagement({
                                         player.status
                                     )}`}
                                 >
-                                    {player.status
-                                        .replace('_', ' ')
-                                        .toLowerCase()}
+                                    {t(
+                                        `playerStatus.${player.status.toLowerCase()}`
+                                    )}
                                 </span>
                             </div>
 
                             <div className="grid grid-cols-2 gap-2 text-xs">
                                 <div>
                                     <span className="text-gray-500">
-                                        Total Buy-in:
+                                        {t(
+                                            'playerManagement.totalBuyIn'
+                                        )}
+                                        :
                                     </span>
                                     <span className="font-medium ml-1">
                                         ${totalBuyIn.toString()}
@@ -313,7 +327,10 @@ export default function PlayerManagement({
                                 </div>
                                 <div>
                                     <span className="text-gray-500">
-                                        Cash Out:
+                                        {t(
+                                            'playerManagement.cashOut'
+                                        )}
+                                        :
                                     </span>
                                     <span className="font-medium ml-1">
                                         $
@@ -373,25 +390,25 @@ export default function PlayerManagement({
                                 scope="col"
                                 className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Player
+                                {t('playerManagement.player')}
                             </th>
                             <th
                                 scope="col"
                                 className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Status
+                                {t('playerManagement.status')}
                             </th>
                             <th
                                 scope="col"
                                 className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Total Buy-in
+                                {t('playerManagement.totalBuyIn')}
                             </th>
                             <th
                                 scope="col"
                                 className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Cash Out Amount
+                                {t('playerManagement.cashOutAmount')}
                             </th>
                             <th
                                 scope="col"
@@ -404,7 +421,7 @@ export default function PlayerManagement({
                                     scope="col"
                                     className="px-4 sm:px-6 py-2 sm:py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
-                                    Actions
+                                    {t('playerManagement.actions')}
                                 </th>
                             )}
                         </tr>
@@ -453,9 +470,9 @@ export default function PlayerManagement({
                                                 player.status
                                             )}`}
                                         >
-                                            {player.status
-                                                .replace('_', ' ')
-                                                .toLowerCase()}
+                                            {t(
+                                                `playerStatus.${player.status.toLowerCase()}`
+                                            )}
                                         </span>
                                     </td>
                                     <td className="px-4 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-900">

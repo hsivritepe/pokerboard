@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { SessionStatus } from '@prisma/client';
 import { useToast } from '@/app/components/ui/toast-context';
+import { useTranslations } from 'next-intl';
 
 interface SessionActionsProps {
     sessionId: string;
@@ -21,6 +22,7 @@ export default function SessionActions({
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const { showToast } = useToast();
+    const t = useTranslations();
 
     const handleStatusChange = async (newStatus: SessionStatus) => {
         try {
@@ -63,9 +65,7 @@ export default function SessionActions({
 
     const handleDeleteSession = async () => {
         if (
-            !window.confirm(
-                'Are you sure you want to delete this session?'
-            )
+            !window.confirm(t('sessionActions.confirmDeleteSession'))
         ) {
             return;
         }
@@ -80,16 +80,22 @@ export default function SessionActions({
             );
 
             if (!response.ok) {
-                showToast('Failed to delete session', 'error');
+                showToast(
+                    t('sessionActions.failedToDeleteSession'),
+                    'error'
+                );
                 return;
             }
 
-            showToast('Session deleted successfully', 'success');
+            showToast(
+                t('sessionActions.sessionDeletedSuccessfully'),
+                'success'
+            );
             router.push('/sessions');
         } catch (error) {
             console.error('Error deleting session:', error);
             showToast(
-                'Failed to delete session. Please try again.',
+                t('sessionActions.failedToDeleteSessionRetry'),
                 'error'
             );
         } finally {
@@ -119,7 +125,7 @@ export default function SessionActions({
                     disabled={isLoading}
                     className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"
                 >
-                    Delete Session
+                    {t('sessionActions.deleteSession')}
                 </button>
             )}
         </div>

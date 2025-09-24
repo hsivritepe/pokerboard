@@ -3,6 +3,7 @@
 import { useEffect, useState, use } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { ConfirmationModal } from '@/components/ConfirmationModal';
 import {
@@ -64,6 +65,7 @@ export default function PlayersPage({ params }: Props) {
     const resolvedParams = use(params);
     const currentLocale = resolvedParams.locale;
     const router = useRouter();
+    const t = useTranslations();
     const [isLoading, setIsLoading] = useState(true);
     const [players, setPlayers] = useState<PlayerStats[]>([]);
     const [sortField, setSortField] = useState<SortField>('name');
@@ -163,7 +165,10 @@ export default function PlayersPage({ params }: Props) {
             );
             setDeleteModalOpen(false);
             setPlayerToDelete(null);
-            showToast('Player deleted successfully', 'success');
+            showToast(
+                t('players.playerDeletedSuccessfully'),
+                'success'
+            );
         } catch (err) {
             console.error('Error deleting player:', err);
             showToast(
@@ -266,7 +271,10 @@ export default function PlayersPage({ params }: Props) {
             );
             setRestoreModalOpen(false);
             setPlayerToRestore(null);
-            showToast('Player restored successfully', 'success');
+            showToast(
+                t('players.playerRestoredSuccessfully'),
+                'success'
+            );
         } catch (err) {
             console.error('Error restoring player:', err);
             showToast(
@@ -359,10 +367,10 @@ export default function PlayersPage({ params }: Props) {
                     <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
                         <div>
                             <h1 className="text-xl font-semibold text-gray-900">
-                                Players
+                                {t('players.title')}
                             </h1>
                             <p className="mt-1 text-sm text-gray-500">
-                                View all players and their statistics
+                                {t('players.description')}
                             </p>
                         </div>
                         <div className="flex items-center gap-4">
@@ -382,7 +390,7 @@ export default function PlayersPage({ params }: Props) {
                                     htmlFor="showDeleted"
                                     className="ml-2 block text-sm text-gray-900"
                                 >
-                                    Show Deleted Players
+                                    {t('players.showDeletedPlayers')}
                                 </label>
                             </div>
                             <Button
@@ -392,7 +400,7 @@ export default function PlayersPage({ params }: Props) {
                                 className="flex items-center gap-2"
                             >
                                 <PlusIcon className="h-5 w-5" />
-                                Add Player
+                                {t('players.addPlayer')}
                             </Button>
                         </div>
                     </div>
@@ -407,7 +415,7 @@ export default function PlayersPage({ params }: Props) {
                                             handleSort('name')
                                         }
                                     >
-                                        Player
+                                        {t('players.player')}
                                         <SortIcon field="name" />
                                     </th>
                                     <th
@@ -417,7 +425,7 @@ export default function PlayersPage({ params }: Props) {
                                             handleSort('totalGames')
                                         }
                                     >
-                                        Total Games
+                                        {t('players.totalGames')}
                                         <SortIcon field="totalGames" />
                                     </th>
                                     <th
@@ -427,7 +435,7 @@ export default function PlayersPage({ params }: Props) {
                                             handleSort('totalBuyIns')
                                         }
                                     >
-                                        Total Buy-ins
+                                        {t('players.totalBuyIns')}
                                         <SortIcon field="totalBuyIns" />
                                     </th>
                                     <th
@@ -439,7 +447,7 @@ export default function PlayersPage({ params }: Props) {
                                             )
                                         }
                                     >
-                                        Total Cashouts
+                                        {t('players.totalCashouts')}
                                         <SortIcon field="totalCashouts" />
                                     </th>
                                     <th
@@ -449,14 +457,14 @@ export default function PlayersPage({ params }: Props) {
                                             handleSort('netProfit')
                                         }
                                     >
-                                        Net Profit/Loss
+                                        {t('players.netProfitLoss')}
                                         <SortIcon field="netProfit" />
                                     </th>
                                     <th
                                         scope="col"
                                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
-                                        Actions
+                                        {t('players.actions')}
                                     </th>
                                 </tr>
                             </thead>
@@ -475,7 +483,9 @@ export default function PlayersPage({ params }: Props) {
                                                 {player.name}
                                                 {player.isDeleted && (
                                                     <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                                        Deleted
+                                                        {t(
+                                                            'players.delete'
+                                                        )}
                                                     </span>
                                                 )}
                                             </div>
@@ -512,7 +522,9 @@ export default function PlayersPage({ params }: Props) {
                                                 href={`/${currentLocale}/players/${player.id}`}
                                                 className="text-blue-600 hover:text-blue-900"
                                             >
-                                                View Details
+                                                {t(
+                                                    'common.viewDetails'
+                                                )}
                                             </Link>
                                             {!player.isDeleted ? (
                                                 <button
@@ -553,27 +565,31 @@ export default function PlayersPage({ params }: Props) {
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Add New Player</DialogTitle>
+                        <DialogTitle>
+                            {t('players.addNewPlayer')}
+                        </DialogTitle>
                         <DialogDescription>
-                            Create a new player in the system
+                            {t('players.createNewPlayerDescription')}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                         <div>
-                            <Label htmlFor="name">Name *</Label>
+                            <Label htmlFor="name">
+                                {t('players.nameRequired')}
+                            </Label>
                             <Input
                                 id="name"
                                 value={newPlayerName}
                                 onChange={(e) =>
                                     setNewPlayerName(e.target.value)
                                 }
-                                placeholder="Player name"
+                                placeholder={t('players.playerName')}
                                 className="mt-1"
                             />
                         </div>
                         <div>
                             <Label htmlFor="email">
-                                Email (optional)
+                                {t('players.emailOptional')}
                             </Label>
                             <Input
                                 id="email"
@@ -582,7 +598,9 @@ export default function PlayersPage({ params }: Props) {
                                 onChange={(e) =>
                                     setNewPlayerEmail(e.target.value)
                                 }
-                                placeholder="player@example.com"
+                                placeholder={t(
+                                    'players.emailPlaceholder'
+                                )}
                                 className="mt-1"
                             />
                         </div>
@@ -595,7 +613,7 @@ export default function PlayersPage({ params }: Props) {
                             }
                             disabled={isCreating}
                         >
-                            Cancel
+                            {t('playerManagement.cancel')}
                         </Button>
                         <Button
                             onClick={handleCreatePlayer}
@@ -604,8 +622,8 @@ export default function PlayersPage({ params }: Props) {
                             }
                         >
                             {isCreating
-                                ? 'Creating...'
-                                : 'Create Player'}
+                                ? t('players.creating')
+                                : t('players.createPlayer')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -618,10 +636,12 @@ export default function PlayersPage({ params }: Props) {
                     setPlayerToDelete(null);
                 }}
                 onConfirm={handleDeleteConfirm}
-                title="Delete Player"
-                message={`Are you sure you want to delete ${playerToDelete?.name}? This action cannot be undone.`}
+                title={t('players.delete')}
+                message={t('players.confirmDeletePlayer')}
                 confirmButtonText={
-                    isDeleting ? 'Deleting...' : 'Delete'
+                    isDeleting
+                        ? t('players.creating')
+                        : t('players.delete')
                 }
                 isDanger={true}
             />
@@ -633,11 +653,11 @@ export default function PlayersPage({ params }: Props) {
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Restore Player</DialogTitle>
+                        <DialogTitle>
+                            {t('players.restore')}
+                        </DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to restore{' '}
-                            {playerToRestore?.name}? This will make
-                            them available for new game sessions.
+                            {t('players.confirmRestorePlayer')}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -655,7 +675,9 @@ export default function PlayersPage({ params }: Props) {
                             onClick={handleRestoreConfirm}
                             disabled={isRestoring}
                         >
-                            {isRestoring ? 'Restoring...' : 'Restore'}
+                            {isRestoring
+                                ? t('players.creating')
+                                : t('players.restore')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

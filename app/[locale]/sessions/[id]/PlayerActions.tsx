@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
@@ -33,6 +34,7 @@ export default function PlayerActions({
     minimumBuyIn,
 }: PlayerActionsProps) {
     const router = useRouter();
+    const t = useTranslations();
     const [isLoading, setIsLoading] = useState(false);
     const [rejoinDialogOpen, setRejoinDialogOpen] = useState(false);
     const [leaveDialogOpen, setLeaveDialogOpen] = useState(false);
@@ -293,7 +295,9 @@ export default function PlayerActions({
                     onClick={() => setRejoinDialogOpen(true)}
                     disabled={isLoading}
                 >
-                    {isLoading ? 'Processing...' : 'Rejoin Game'}
+                    {isLoading
+                        ? t('playerManagement.processing')
+                        : t('playerManagement.rejoinGame')}
                 </Button>
             )}
 
@@ -408,7 +412,9 @@ export default function PlayerActions({
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Rejoin Game</DialogTitle>
+                        <DialogTitle>
+                            {t('playerManagement.rejoinGame')}
+                        </DialogTitle>
                         <DialogDescription>
                             {playerName} will rejoin the game with
                             their previous stack of $
@@ -466,8 +472,8 @@ export default function PlayerActions({
                             disabled={isLoading}
                         >
                             {isLoading
-                                ? 'Processing...'
-                                : 'Rejoin Game'}
+                                ? t('playerManagement.processing')
+                                : t('playerManagement.rejoinGame')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
