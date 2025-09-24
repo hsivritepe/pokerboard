@@ -9,7 +9,7 @@ services:
             - DATABASE_URL=postgresql://postgres:postgres@db:5432/pokerboard
             - NODE_ENV=development
             - NEXTAUTH_URL=http://localhost:3000
-            - NEXTAUTH_SECRET=your-secret-key-here
+            - NEXTAUTH_SECRET=oM9zD94t864o5YSLUCj3w1eC89rtTkVOmXcm7TnWy78=
         volumes:
             - .:/app
             - /app/node_modules

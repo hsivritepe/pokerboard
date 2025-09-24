@@ -2,9 +2,14 @@
 
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
 
 export default function Home() {
     const t = useTranslations();
+    const pathname = usePathname();
+
+    // Detect current locale from pathname
+    const currentLocale = pathname?.split('/')[1] || 'en';
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -20,7 +25,7 @@ export default function Home() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <Link
-                        href="sessions/new"
+                        href={`/${currentLocale}/sessions/new`}
                         className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
                     >
                         <h2 className="text-2xl font-semibold text-gray-900 mb-2">
@@ -32,7 +37,7 @@ export default function Home() {
                     </Link>
 
                     <Link
-                        href="sessions"
+                        href={`/${currentLocale}/sessions`}
                         className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
                     >
                         <h2 className="text-2xl font-semibold text-gray-900 mb-2">
@@ -44,7 +49,7 @@ export default function Home() {
                     </Link>
 
                     <Link
-                        href="/settlements"
+                        href={`/${currentLocale}/settlements`}
                         className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
                     >
                         <h2 className="text-2xl font-semibold text-gray-900 mb-2">
