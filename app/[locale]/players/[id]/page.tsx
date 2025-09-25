@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { format } from 'date-fns';
+import { useTranslations } from 'next-intl';
 import {
     Card,
     CardContent,
@@ -61,6 +62,7 @@ export default function PlayerDetailPage({
     params: Promise<PageParams>;
 }) {
     const { data: session } = useSession();
+    const t = useTranslations();
     const router = useRouter();
     const resolvedParams = use(params) as PageParams;
     const [player, setPlayer] = useState<Player | null>(null);
@@ -172,7 +174,7 @@ export default function PlayerDetailPage({
                     onClick={() => router.back()}
                     className="mb-4"
                 >
-                    Back to Players
+                    {t('playerDetail.backToPlayers')}
                 </Button>
             </div>
 
@@ -193,7 +195,7 @@ export default function PlayerDetailPage({
                     <Card>
                         <CardHeader>
                             <CardTitle className="text-sm font-medium text-gray-500">
-                                Total Games
+                                {t('playerDetail.totalGames')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
@@ -206,7 +208,7 @@ export default function PlayerDetailPage({
                     <Card>
                         <CardHeader>
                             <CardTitle className="text-sm font-medium text-gray-500">
-                                Total Buy-ins
+                                {t('playerDetail.totalBuyIns')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
@@ -219,7 +221,7 @@ export default function PlayerDetailPage({
                     <Card>
                         <CardHeader>
                             <CardTitle className="text-sm font-medium text-gray-500">
-                                Net Profit/Loss
+                                {t('playerDetail.netProfitLoss')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
@@ -240,7 +242,7 @@ export default function PlayerDetailPage({
 
                 <div>
                     <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                        Session History
+                        {t('playerDetail.sessionHistory')}
                     </h2>
                     <div className="mb-6 flex flex-col sm:flex-row gap-4">
                         <div className="relative z-50">
@@ -253,7 +255,7 @@ export default function PlayerDetailPage({
                                 </SelectTrigger>
                                 <SelectContent className="bg-white text-gray-900">
                                     <SelectItem key="all" value="all">
-                                        All Time
+                                        {t('playerDetail.allTime')}
                                     </SelectItem>
                                     <SelectItem key="1" value="1">
                                         Last Month
@@ -286,7 +288,7 @@ export default function PlayerDetailPage({
                                         key="all-games"
                                         value="all"
                                     >
-                                        All Games
+                                        {t('playerDetail.allGames')}
                                     </SelectItem>
                                     {(() => {
                                         console.log(
@@ -351,43 +353,43 @@ export default function PlayerDetailPage({
                                         scope="col"
                                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
-                                        Date
+                                        {t('playerDetail.date')}
                                     </th>
                                     <th
                                         scope="col"
                                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
-                                        Location
+                                        {t('playerDetail.location')}
                                     </th>
                                     <th
                                         scope="col"
                                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
-                                        Buy-in
+                                        {t('playerDetail.buyIn')}
                                     </th>
                                     <th
                                         scope="col"
                                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
-                                        Cashout
+                                        {t('playerDetail.cashout')}
                                     </th>
                                     <th
                                         scope="col"
                                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
-                                        Net
+                                        {t('playerDetail.net')}
                                     </th>
                                     <th
                                         scope="col"
                                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
-                                        Status
+                                        {t('playerDetail.status')}
                                     </th>
                                     <th
                                         scope="col"
                                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
-                                        Actions
+                                        {t('playerDetail.actions')}
                                     </th>
                                 </tr>
                             </thead>
@@ -462,7 +464,9 @@ export default function PlayerDetailPage({
                                                     href={`/${resolvedParams.locale}/sessions/${session.session.id}/players/${session.id}`}
                                                     className="text-blue-600 hover:text-blue-900"
                                                 >
-                                                    View Details
+                                                    {t(
+                                                        'playerDetail.viewDetails'
+                                                    )}
                                                 </Link>
                                             </td>
                                         </tr>
@@ -474,7 +478,7 @@ export default function PlayerDetailPage({
                                     className="bg-gray-50 font-medium"
                                 >
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        Totals
+                                        {t('playerDetail.totals')}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"></td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">

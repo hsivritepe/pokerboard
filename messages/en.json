@@ -213,5 +213,23 @@
     },
     "loading": {
         "adding": "Adding..."
+    },
+    "playerDetail": {
+        "backToPlayers": "Back to Players",
+        "totalGames": "Total Games",
+        "totalBuyIns": "Total Buy-ins",
+        "netProfitLoss": "Net Profit/Loss",
+        "sessionHistory": "Session History",
+        "allTime": "All Time",
+        "allGames": "All Games",
+        "date": "Date",
+        "location": "Location",
+        "buyIn": "Buy-in",
+        "cashout": "Cashout",
+        "net": "Net",
+        "status": "Status",
+        "actions": "Actions",
+        "viewDetails": "View Details",
+        "totals": "Totals"
     }
 }

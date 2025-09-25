@@ -122,8 +122,10 @@ export default function PlayerManagement({
             );
 
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ error: 'Failed to add player' }));
-                const errorMessage = errorData.messageKey 
+                const errorData = await response
+                    .json()
+                    .catch(() => ({ error: 'Failed to add player' }));
+                const errorMessage = errorData.messageKey
                     ? t(errorData.messageKey)
                     : errorData.error || 'Failed to add player';
                 throw new Error(errorMessage);

@@ -213,5 +213,23 @@
     },
     "loading": {
         "adding": "Ekleniyor..."
+    },
+    "playerDetail": {
+        "backToPlayers": "Oyunculara Dön",
+        "totalGames": "Toplam Oyun",
+        "totalBuyIns": "Toplam Giriş",
+        "netProfitLoss": "Net Kar/Zarar",
+        "sessionHistory": "Oturum Geçmişi",
+        "allTime": "Tüm Zamanlar",
+        "allGames": "Tüm Oyunlar",
+        "date": "Tarih",
+        "location": "Konum",
+        "buyIn": "Giriş",
+        "cashout": "Çıkış",
+        "net": "Net",
+        "status": "Durum",
+        "actions": "İşlemler",
+        "viewDetails": "Detayları Görüntüle",
+        "totals": "Toplamlar"
     }
 }
