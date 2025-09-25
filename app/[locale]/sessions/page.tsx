@@ -180,7 +180,7 @@ export default function SessionsPage({ params }: Props) {
                                                         {t(
                                                             'common.minBuyIn'
                                                         )}
-                                                        : $
+                                                        : ₺
                                                         {
                                                             sessionItem.buyIn
                                                         }
