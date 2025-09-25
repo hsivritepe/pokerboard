@@ -207,5 +207,11 @@
     "sessionCost": {
         "updated": "Session cost updated to ${amount}",
         "updatedSuccessfully": "Session cost updated successfully"
+    },
+    "sessionStatus": {
+        "notActive": "Session is not active"
+    },
+    "loading": {
+        "adding": "Adding..."
     }
 }

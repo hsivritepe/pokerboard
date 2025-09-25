@@ -47,9 +47,15 @@ export async function POST(
 
         // Check if session is still ongoing
         if (gameSession.status !== SessionStatus.ONGOING) {
-            return new NextResponse('Session is not active', {
-                status: 400,
-            });
+            return NextResponse.json(
+                {
+                    error: 'Session is not active',
+                    messageKey: 'sessionStatus.notActive',
+                },
+                {
+                    status: 400,
+                }
+            );
         }
 
         const body = await request.json();

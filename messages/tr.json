@@ -207,5 +207,11 @@
     "sessionCost": {
         "updated": "Oturum maliyeti ${amount} olarak güncellendi",
         "updatedSuccessfully": "Oturum maliyeti başarıyla güncellendi"
+    },
+    "sessionStatus": {
+        "notActive": "Oturum aktif değil"
+    },
+    "loading": {
+        "adding": "Ekleniyor..."
     }
 }

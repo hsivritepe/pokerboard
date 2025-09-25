@@ -122,8 +122,11 @@ export default function PlayerManagement({
             );
 
             if (!response.ok) {
-                const data = await response.text();
-                throw new Error(data);
+                const errorData = await response.json().catch(() => ({ error: 'Failed to add player' }));
+                const errorMessage = errorData.messageKey 
+                    ? t(errorData.messageKey)
+                    : errorData.error || 'Failed to add player';
+                throw new Error(errorMessage);
             }
 
             // Reset form and refresh data
@@ -253,7 +256,7 @@ export default function PlayerManagement({
                                 disabled={isLoading}
                             >
                                 {isLoading
-                                    ? 'Adding...'
+                                    ? t('loading.adding')
                                     : t('playerManagement.addPlayer')}
                             </button>
                         </div>

@@ -8,6 +8,7 @@ import {
     CheckIcon,
     PlusIcon,
 } from '@heroicons/react/20/solid';
+import { useTranslations } from 'next-intl';
 
 interface User {
     id: string;
@@ -27,6 +28,7 @@ export default function AddPlayerModal({
     minimumBuyIn,
 }: AddPlayerModalProps) {
     const router = useRouter();
+    const t = useTranslations();
     const [isLoading, setIsLoading] = useState(false);
     const [mode, setMode] = useState<'select' | 'create'>('select');
     const [query, setQuery] = useState('');
@@ -98,8 +100,11 @@ export default function AddPlayerModal({
             );
 
             if (!response.ok) {
-                const error = await response.text();
-                throw new Error(error || 'Failed to add player');
+                const errorData = await response.json().catch(() => ({ error: 'Failed to add player' }));
+                const errorMessage = errorData.messageKey 
+                    ? t(errorData.messageKey)
+                    : errorData.error || 'Failed to add player';
+                throw new Error(errorMessage);
             }
 
             router.refresh();
@@ -421,7 +426,9 @@ export default function AddPlayerModal({
                             disabled={isLoading}
                             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
                         >
-                            {isLoading ? 'Adding...' : 'Add Player'}
+                            {isLoading
+                                ? t('loading.adding')
+                                : t('playerManagement.addPlayer')}
                         </button>
                     </div>
                 </div>
