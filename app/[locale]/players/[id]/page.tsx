@@ -234,7 +234,7 @@ export default function PlayerDetailPage({
                                         : 'text-red-600'
                                 )}
                             >
-                                {netProfit >= 0 ? '+' : ''}$
+                                {netProfit >= 0 ? '+' : ''}₺
                                 {netProfit}
                             </p>
                         </CardContent>
@@ -426,11 +426,11 @@ export default function PlayerDetailPage({
                                                 }
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                $
+                                                ₺
                                                 {session.initialBuyIn}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                $
+                                                ₺
                                                 {session.currentStack}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm">

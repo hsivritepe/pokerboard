@@ -408,7 +408,7 @@ export default function AddPlayerModal({
                             />
                         </div>
                         <p className="mt-1 text-sm text-gray-500">
-                            Minimum buy-in: ${minimumBuyIn}
+                            Minimum buy-in: ₺{minimumBuyIn}
                         </p>
                     </div>
 
