@@ -197,5 +197,11 @@
     "profitLoss": {
         "profitLoss": "Kar/Zarar",
         "netProfitLoss": "Net Kar/Zarar"
+    },
+    "rejoinGame": {
+        "description": "{playerName} oyuna ${currentStack} önceki stack'i ile tekrar katılacak. İsteğe bağlı olarak daha fazla chip ekleyebilirsiniz.",
+        "additionalBuyIn": "Ek Satın Alma (isteğe bağlı)",
+        "minAmount": "Min: $0",
+        "cancel": "İptal"
     }
 }

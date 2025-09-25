@@ -197,5 +197,11 @@
     "profitLoss": {
         "profitLoss": "Profit/Loss",
         "netProfitLoss": "Net Profit/Loss"
+    },
+    "rejoinGame": {
+        "description": "{playerName} will rejoin the game with their previous stack of ${currentStack}. You can optionally add more chips.",
+        "additionalBuyIn": "Additional Buy-in (optional)",
+        "minAmount": "Min: $0",
+        "cancel": "Cancel"
     }
 }

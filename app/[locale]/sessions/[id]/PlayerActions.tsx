@@ -390,7 +390,7 @@ export default function PlayerActions({
                             }}
                             disabled={isLoading}
                         >
-                            Cancel
+                            {t('rejoinGame.cancel')}
                         </Button>
                         <Button
                             variant="destructive"
@@ -416,10 +416,10 @@ export default function PlayerActions({
                             {t('playerManagement.rejoinGame')}
                         </DialogTitle>
                         <DialogDescription>
-                            {playerName} will rejoin the game with
-                            their previous stack of $
-                            {currentStack.toFixed(2)}. You can
-                            optionally add more chips.
+                            {t('rejoinGame.description', {
+                                playerName,
+                                currentStack: currentStack.toFixed(2),
+                            })}
                         </DialogDescription>
                     </DialogHeader>
 
@@ -429,14 +429,16 @@ export default function PlayerActions({
                                 htmlFor="additionalBuyIn"
                                 className="block mb-2"
                             >
-                                Additional Buy-in (optional)
+                                {t('rejoinGame.additionalBuyIn')}
                             </Label>
                             <Input
                                 id="additionalBuyIn"
                                 type="number"
                                 min="0"
                                 step="0.01"
-                                placeholder={`Min: $0`}
+                                placeholder={t(
+                                    'rejoinGame.minAmount'
+                                )}
                                 value={additionalBuyIn}
                                 onChange={(e) => {
                                     const value = e.target.value;
@@ -465,7 +467,7 @@ export default function PlayerActions({
                             }}
                             disabled={isLoading}
                         >
-                            Cancel
+                            {t('rejoinGame.cancel')}
                         </Button>
                         <Button
                             onClick={handleRejoinGame}
@@ -537,7 +539,7 @@ export default function PlayerActions({
                             }}
                             disabled={isLoading}
                         >
-                            Cancel
+                            {t('rejoinGame.cancel')}
                         </Button>
                         <Button
                             onClick={handleAddChips}
