@@ -73,9 +73,8 @@ export async function POST(
         `;
 
         return NextResponse.json({
-            message: `Session cost updated to $${sessionCost.toFixed(
-                2
-            )}`,
+            messageKey: 'sessionCost.updated',
+            messageParams: { amount: `$${sessionCost.toFixed(2)}` },
             sessionCost: sessionCost,
         });
     } catch (error) {

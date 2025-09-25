@@ -122,10 +122,12 @@ export default function SessionSettlement({
             const data = await response.json();
             console.log('Response data:', data);
 
-            showToast(
-                data.message || 'Session cost updated successfully',
-                'success'
-            );
+            const message = data.messageKey
+                ? t(data.messageKey, data.messageParams)
+                : data.message ||
+                  t('sessionCost.updatedSuccessfully');
+
+            showToast(message, 'success');
         } catch (error) {
             console.error('Error updating session cost:', error);
 

@@ -203,5 +203,9 @@
         "additionalBuyIn": "Additional Buy-in (optional)",
         "minAmount": "Min: $0",
         "cancel": "Cancel"
+    },
+    "sessionCost": {
+        "updated": "Session cost updated to ${amount}",
+        "updatedSuccessfully": "Session cost updated successfully"
     }
 }

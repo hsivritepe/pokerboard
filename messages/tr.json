@@ -203,5 +203,9 @@
         "additionalBuyIn": "Ek Satın Alma (isteğe bağlı)",
         "minAmount": "Min: $0",
         "cancel": "İptal"
+    },
+    "sessionCost": {
+        "updated": "Oturum maliyeti ${amount} olarak güncellendi",
+        "updatedSuccessfully": "Oturum maliyeti başarıyla güncellendi"
     }
 }
