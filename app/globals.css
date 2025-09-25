@@ -29,28 +29,26 @@
     --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #1a1a1a;
-        --foreground: #e5e5e5;
-        --card: #262626;
-        --card-foreground: #e5e5e5;
-        --popover: #262626;
-        --popover-foreground: #e5e5e5;
-        --primary: #3b82f6;
-        --primary-foreground: #ffffff;
-        --secondary: #404040;
-        --secondary-foreground: #e5e5e5;
-        --muted: #404040;
-        --muted-foreground: #a3a3a3;
-        --accent: #404040;
-        --accent-foreground: #e5e5e5;
-        --destructive: #ef4444;
-        --destructive-foreground: #ffffff;
-        --border: #404040;
-        --input: #404040;
-        --ring: #3b82f6;
-    }
+.dark {
+    --background: #1a1a1a;
+    --foreground: #e5e5e5;
+    --card: #262626;
+    --card-foreground: #e5e5e5;
+    --popover: #262626;
+    --popover-foreground: #e5e5e5;
+    --primary: #3b82f6;
+    --primary-foreground: #ffffff;
+    --secondary: #404040;
+    --secondary-foreground: #e5e5e5;
+    --muted: #404040;
+    --muted-foreground: #a3a3a3;
+    --accent: #404040;
+    --accent-foreground: #e5e5e5;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --border: #404040;
+    --input: #404040;
+    --ring: #3b82f6;
 
     /* Subtle dark theme overrides for better readability */
     .bg-white {

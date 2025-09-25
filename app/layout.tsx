@@ -3,6 +3,7 @@ import './globals.css';
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import { ToastProvider } from './components/ui/toast-context';
 import { SimpleNavigation } from '@/components/SimpleNavigation';
+import { ThemeProvider } from '@/components/providers/ThemeProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,14 +19,21 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <body className={inter.className}>
-                <AuthProvider>
-                    <ToastProvider>
-                        <SimpleNavigation />
-                        {children}
-                    </ToastProvider>
-                </AuthProvider>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    <AuthProvider>
+                        <ToastProvider>
+                            <SimpleNavigation />
+                            {children}
+                        </ToastProvider>
+                    </AuthProvider>
+                </ThemeProvider>
             </body>
         </html>
     );

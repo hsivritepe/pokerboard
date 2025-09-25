@@ -11,6 +11,7 @@ import {
     GlobeAltIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
+import { ThemeToggle } from './ThemeToggle';
 
 const languages = [
     { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -112,6 +113,9 @@ export function SimpleNavigation() {
                                 </div>
                             </div>
                             <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
+                                {/* Theme Toggle */}
+                                <ThemeToggle />
+
                                 {/* Language Switcher */}
                                 <Menu as="div" className="relative">
                                     <Menu.Button className="flex items-center rounded-md bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
@@ -281,6 +285,16 @@ export function SimpleNavigation() {
                             ))}
                         </div>
                         <div className="border-t border-gray-200 pb-3 pt-4">
+                            {/* Mobile Theme Toggle */}
+                            <div className="px-4 py-2">
+                                <p className="text-sm font-medium text-gray-500 mb-2">
+                                    Theme
+                                </p>
+                                <div className="flex justify-center">
+                                    <ThemeToggle />
+                                </div>
+                            </div>
+
                             {/* Mobile Language Switcher */}
                             <div className="px-4 py-2">
                                 <p className="text-sm font-medium text-gray-500 mb-2">
