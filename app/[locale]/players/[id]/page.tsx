@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { format } from 'date-fns';
+import { tr } from 'date-fns/locale';
 import { useTranslations } from 'next-intl';
 import {
     Card,
@@ -408,7 +409,14 @@ export default function PlayerDetailPage({
                                                     new Date(
                                                         session.session.date
                                                     ),
-                                                    'PPP'
+                                                    'PPP',
+                                                    {
+                                                        locale:
+                                                            resolvedParams.locale ===
+                                                            'tr'
+                                                                ? tr
+                                                                : undefined,
+                                                    }
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -456,7 +464,9 @@ export default function PlayerDetailPage({
                                                             : 'bg-gray-100 text-gray-800'
                                                     }`}
                                                 >
-                                                    {session.session.status.toLowerCase()}
+                                                    {t(
+                                                        `sessionStatus.${session.session.status.toLowerCase()}`
+                                                    )}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm">

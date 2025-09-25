@@ -231,5 +231,10 @@
         "actions": "Actions",
         "viewDetails": "View Details",
         "totals": "Totals"
+    },
+    "sessionStatus": {
+        "ongoing": "Ongoing",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
     }
 }

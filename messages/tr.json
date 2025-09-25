@@ -231,5 +231,10 @@
         "actions": "İşlemler",
         "viewDetails": "Detayları Görüntüle",
         "totals": "Toplamlar"
+    },
+    "sessionStatus": {
+        "ongoing": "Devam Ediyor",
+        "completed": "Tamamlandı",
+        "cancelled": "İptal Edildi"
     }
 }
