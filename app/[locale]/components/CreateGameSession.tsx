@@ -273,7 +273,7 @@ export default function CreateGameSession({
                                         </span>
                                         <div className="flex items-center gap-4">
                                             <span className="text-gray-600">
-                                                ${player.initialBuyIn}
+                                                ₺{player.initialBuyIn}
                                             </span>
                                             <button
                                                 type="button"

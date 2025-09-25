@@ -83,7 +83,7 @@
         "dateAndTime": "Tarih ve saat",
         "addPlayers": "Oyuncu ekle",
         "pleaseSelectPlayerAndEnterBuyIn": "Lütfen bir oyuncu seçin ve giriş miktarını girin",
-        "buyInAmountMustBeAtLeast": "Giriş miktarı en az ${minBuyIn} olmalıdır",
+        "buyInAmountMustBeAtLeast": "Giriş miktarı en az ₺{minBuyIn} olmalıdır",
         "playerAlreadyAdded": "Bu oyuncu zaten oyuna eklenmiş",
         "pleaseFillAllRequiredFields": "Lütfen tüm gerekli alanları doldurun ve en az bir oyuncu ekleyin",
         "failedToCreateGameSession": "Oyun oturumu oluşturulamadı",
@@ -186,7 +186,7 @@
         "lastPlayerCashOutRecommendation": "Son Oyuncu Çıkış Önerisi",
         "cashOut": "Çıkış",
         "profitLoss": "Kar/Zarar",
-        "sessionCostDistributed": "${amount} oturum maliyeti kazananlar arasında dağıtıldı",
+        "sessionCostDistributed": "₺{amount} oturum maliyeti kazananlar arasında dağıtıldı",
         "original": "Orijinal",
         "sessionCost": "Oturum Maliyeti",
         "finalAmount": "Son Miktar",
@@ -199,13 +199,13 @@
         "netProfitLoss": "Net Kar/Zarar"
     },
     "rejoinGame": {
-        "description": "{playerName} oyuna ${currentStack} önceki stack'i ile tekrar katılacak. İsteğe bağlı olarak daha fazla chip ekleyebilirsiniz.",
+        "description": "{playerName} oyuna ₺{currentStack} önceki stack'i ile tekrar katılacak. İsteğe bağlı olarak daha fazla chip ekleyebilirsiniz.",
         "additionalBuyIn": "Ek Satın Alma (isteğe bağlı)",
-        "minAmount": "Min: $0",
+        "minAmount": "Min: ₺0",
         "cancel": "İptal"
     },
     "sessionCost": {
-        "updated": "Oturum maliyeti ${amount} olarak güncellendi",
+        "updated": "Oturum maliyeti ₺{amount} olarak güncellendi",
         "updatedSuccessfully": "Oturum maliyeti başarıyla güncellendi"
     },
     "sessionStatus": {

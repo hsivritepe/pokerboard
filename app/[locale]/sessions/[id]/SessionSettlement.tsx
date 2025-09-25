@@ -290,7 +290,7 @@ export default function SessionSettlement({
                 totalProfit - totalLoss
             ).toFixed(2);
             setError(
-                `Settlement imbalance detected: $${difference} difference between profits and losses. For accurate results, the total profits should equal the total losses. Please adjust player cash out amounts before calculating settlement.`
+                `Settlement imbalance detected: ₺${difference} difference between profits and losses. For accurate results, the total profits should equal the total losses. Please adjust player cash out amounts before calculating settlement.`
             );
             // Continue with settlement calculation even if not balanced
         } else {
@@ -381,7 +381,7 @@ export default function SessionSettlement({
                                 {t('settlement.totalBuyIns')}
                             </h3>
                             <p className="text-lg font-semibold">
-                                ${totalBuyIns.toString()}
+                                ₺{totalBuyIns.toString()}
                             </p>
                         </div>
                         <div className="bg-green-50 p-3 rounded-lg">
@@ -389,7 +389,7 @@ export default function SessionSettlement({
                                 {t('settlement.totalCashOut')}
                             </h3>
                             <p className="text-lg font-semibold">
-                                ${totalCashOut.toString()}
+                                ₺{totalCashOut.toString()}
                             </p>
                         </div>
                         <div className="bg-green-50 p-3 rounded-lg">
@@ -397,7 +397,7 @@ export default function SessionSettlement({
                                 {t('settlement.totalProfit')}
                             </h3>
                             <p className="text-lg font-semibold">
-                                ${totalProfit.toString()}
+                                ₺{totalProfit.toString()}
                             </p>
                         </div>
                         <div className="bg-red-50 p-3 rounded-lg">
@@ -405,7 +405,7 @@ export default function SessionSettlement({
                                 {t('settlement.totalLoss')}
                             </h3>
                             <p className="text-lg font-semibold">
-                                ${totalLoss.toString()}
+                                ₺{totalLoss.toString()}
                             </p>
                         </div>
                     </div>
@@ -629,7 +629,7 @@ export default function SessionSettlement({
                         </DialogTitle>
                         <DialogDescription>
                             {t('settlement.sessionCostDistributed', {
-                                amount: `$${sessionCost.toString()}`,
+                                amount: `₺${sessionCost.toString()}`,
                             })}
                         </DialogDescription>
                     </DialogHeader>

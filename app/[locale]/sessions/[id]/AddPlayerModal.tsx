@@ -79,7 +79,7 @@ export default function AddPlayerModal({
         }
 
         if (!buyInAmount || parseFloat(buyInAmount) < minimumBuyIn) {
-            alert(`Minimum buy-in amount is $${minimumBuyIn}`);
+            alert(`Minimum buy-in amount is ₺${minimumBuyIn}`);
             return;
         }
 
@@ -130,7 +130,7 @@ export default function AddPlayerModal({
         }
 
         if (!buyInAmount || parseFloat(buyInAmount) < minimumBuyIn) {
-            alert(`Minimum buy-in amount is $${minimumBuyIn}`);
+            alert(`Minimum buy-in amount is ₺${minimumBuyIn}`);
             return;
         }
 

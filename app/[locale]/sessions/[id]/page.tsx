@@ -130,7 +130,7 @@ export default async function SessionDetailPage({ params }: Props) {
                                 <span className="font-medium">
                                     {t('sessionDetail.minimumBuyIn')}:
                                 </span>{' '}
-                                ${gameSession.buyIn}
+                                ₺{gameSession.buyIn}
                             </div>
                             <div>
                                 <span className="font-medium">

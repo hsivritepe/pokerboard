@@ -70,7 +70,7 @@ export async function POST(
         // Check if buy-in meets minimum requirement
         if (initialBuyIn < gameSession.buyIn) {
             return new NextResponse(
-                `Buy-in must be at least $${gameSession.buyIn}`,
+                `Buy-in must be at least ₺${gameSession.buyIn}`,
                 { status: 400 }
             );
         }

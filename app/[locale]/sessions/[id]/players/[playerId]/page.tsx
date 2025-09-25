@@ -191,7 +191,7 @@ export default function PlayerDetailPage({ params }: Props) {
                                 Buy-in:
                             </span>{' '}
                             <span className="font-medium text-gray-900">
-                                ${playerSession.session.buyIn}
+                                ₺{playerSession.session.buyIn}
                             </span>
                         </div>
                         <div>
@@ -403,7 +403,7 @@ export default function PlayerDetailPage({ params }: Props) {
                                             Total Buy-in
                                         </span>
                                         <span className="font-medium text-gray-900">
-                                            ${totalBuyIn}
+                                            ₺{totalBuyIn}
                                         </span>
                                     </div>
                                     {playerSession.status ===
@@ -438,7 +438,7 @@ export default function PlayerDetailPage({ params }: Props) {
                                                 {netProfit >= 0
                                                     ? '+'
                                                     : ''}{' '}
-                                                ${Math.abs(netProfit)}
+                                                ₺{Math.abs(netProfit)}
                                             </span>
                                         ) : (
                                             <span className="text-gray-700 italic">

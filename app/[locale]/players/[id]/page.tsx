@@ -214,7 +214,7 @@ export default function PlayerDetailPage({
                         </CardHeader>
                         <CardContent>
                             <p className="text-2xl font-bold text-gray-900">
-                                ${totalBuyIns}
+                                ₺{totalBuyIns}
                             </p>
                         </CardContent>
                     </Card>
@@ -445,7 +445,7 @@ export default function PlayerDetailPage({
                                                     {sessionNet >= 0
                                                         ? '+'
                                                         : ''}
-                                                    ${sessionNet}
+                                                    ₺{sessionNet}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
@@ -492,10 +492,10 @@ export default function PlayerDetailPage({
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"></td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ${totalBuyIns}
+                                        ₺{totalBuyIns}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ${totalCashouts}
+                                        ₺{totalCashouts}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                                         <span
@@ -508,7 +508,7 @@ export default function PlayerDetailPage({
                                             {netProfit >= 0
                                                 ? '+'
                                                 : ''}
-                                            ${netProfit}
+                                            ₺{netProfit}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"></td>

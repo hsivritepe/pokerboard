@@ -98,7 +98,7 @@ export default function PlayerManagement({
     const handleAddPlayer = async () => {
         if (!selectedUserId || buyInAmount < minimumBuyIn) {
             setError(
-                `Please select a player and enter a buy-in amount of at least $${minimumBuyIn}`
+                `Please select a player and enter a buy-in amount of at least ₺${minimumBuyIn}`
             );
             return;
         }
@@ -327,7 +327,7 @@ export default function PlayerManagement({
                                         :
                                     </span>
                                     <span className="font-medium ml-1">
-                                        ${totalBuyIn.toString()}
+                                        ₺{totalBuyIn.toString()}
                                     </span>
                                 </div>
                                 <div>
@@ -355,7 +355,7 @@ export default function PlayerManagement({
                                                 : ''
                                         }`}
                                     >
-                                        ${profitLoss.toString()}
+                                        ₺{profitLoss.toString()}
                                     </span>
                                 </div>
 
@@ -481,7 +481,7 @@ export default function PlayerManagement({
                                         </span>
                                     </td>
                                     <td className="px-4 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ${totalBuyIn.toString()}
+                                        ₺{totalBuyIn.toString()}
                                     </td>
                                     <td className="px-4 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-900">
                                         $
@@ -497,7 +497,7 @@ export default function PlayerManagement({
                                                     : 'text-gray-900'
                                             }
                                         >
-                                            ${profitLoss.toString()}
+                                            ₺{profitLoss.toString()}
                                         </span>
                                     </td>
                                     {canManagePlayers && (

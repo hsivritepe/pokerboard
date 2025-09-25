@@ -83,7 +83,7 @@
         "dateAndTime": "Date and Time",
         "addPlayers": "Add Players",
         "pleaseSelectPlayerAndEnterBuyIn": "Please select a player and enter buy-in amount",
-        "buyInAmountMustBeAtLeast": "Buy-in amount must be at least ${minBuyIn}",
+        "buyInAmountMustBeAtLeast": "Buy-in amount must be at least ₺{minBuyIn}",
         "playerAlreadyAdded": "This player is already added to the game",
         "pleaseFillAllRequiredFields": "Please fill in all required fields and add at least one player",
         "failedToCreateGameSession": "Failed to create game session",
@@ -186,7 +186,7 @@
         "lastPlayerCashOutRecommendation": "Last Player Cash Out Recommendation",
         "cashOut": "Cash Out",
         "profitLoss": "Profit/Loss",
-        "sessionCostDistributed": "Session cost of ${amount} distributed among winners",
+        "sessionCostDistributed": "Session cost of ₺{amount} distributed among winners",
         "original": "Original",
         "sessionCost": "Session Cost",
         "finalAmount": "Final Amount",
@@ -199,13 +199,13 @@
         "netProfitLoss": "Net Profit/Loss"
     },
     "rejoinGame": {
-        "description": "{playerName} will rejoin the game with their previous stack of ${currentStack}. You can optionally add more chips.",
+        "description": "{playerName} will rejoin the game with their previous stack of ₺{currentStack}. You can optionally add more chips.",
         "additionalBuyIn": "Additional Buy-in (optional)",
-        "minAmount": "Min: $0",
+        "minAmount": "Min: ₺0",
         "cancel": "Cancel"
     },
     "sessionCost": {
-        "updated": "Session cost updated to ${amount}",
+        "updated": "Session cost updated to ₺{amount}",
         "updatedSuccessfully": "Session cost updated successfully"
     },
     "sessionStatus": {
