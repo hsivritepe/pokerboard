@@ -13,6 +13,7 @@ import {
 } from '@/app/components/ui/card';
 import PlayerActions from './PlayerActions';
 import { use } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface Transaction {
     id: string;
@@ -71,6 +72,7 @@ interface Props {
 export default function PlayerDetailPage({ params }: Props) {
     const { data: session } = useSession();
     const router = useRouter();
+    const t = useTranslations();
     const [playerSession, setPlayerSession] =
         useState<PlayerSession | null>(null);
     const [loading, setLoading] = useState(true);
@@ -420,7 +422,9 @@ export default function PlayerDetailPage({ params }: Props) {
                                     )}
                                     <div className="flex justify-between">
                                         <span className="text-gray-700">
-                                            Net Profit/Loss
+                                            {t(
+                                                'profitLoss.netProfitLoss'
+                                            )}
                                         </span>
                                         {playerSession.status ===
                                         'CASHED_OUT' ? (

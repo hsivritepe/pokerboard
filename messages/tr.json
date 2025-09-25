@@ -193,5 +193,9 @@
         "close": "Kapat",
         "saving": "Kaydediliyor...",
         "saveCost": "Maliyeti Kaydet"
+    },
+    "profitLoss": {
+        "profitLoss": "Kar/Zarar",
+        "netProfitLoss": "Net Kar/Zarar"
     }
 }

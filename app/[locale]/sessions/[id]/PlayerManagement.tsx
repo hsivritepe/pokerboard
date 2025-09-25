@@ -339,7 +339,7 @@ export default function PlayerManagement({
                                 </div>
                                 <div>
                                     <span className="text-gray-500">
-                                        Profit/Loss:
+                                        {t('profitLoss.profitLoss')}:
                                     </span>
                                     <span
                                         className={`font-medium ml-1 ${
@@ -414,7 +414,7 @@ export default function PlayerManagement({
                                 scope="col"
                                 className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Profit/Loss
+                                {t('profitLoss.profitLoss')}
                             </th>
                             {canManagePlayers && (
                                 <th
