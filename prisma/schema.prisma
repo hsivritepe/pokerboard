@@ -24,6 +24,7 @@ model User {
   playerSessions       PlayerSession[]
   settlementsToPay     Settlement[]    @relation("payer")
   settlementsToReceive Settlement[]    @relation("receiver")
+  sessionSettlements   SessionSettlement[]
   transactions         Transaction[]
 
   @@index([isDeleted, name])
@@ -43,6 +44,7 @@ model GameSession {
   host         User            @relation("host", fields: [hostId], references: [id])
   participants PlayerSession[]
   settlements  Settlement[]
+  sessionSettlements SessionSettlement[]
   transactions Transaction[]
 
   @@index([hostId])
@@ -100,6 +102,23 @@ model Settlement {
   @@index([sessionId])
   @@index([payerId])
   @@index([receiverId])
+}
+
+model SessionSettlement {
+  id              String      @id @default(cuid())
+  sessionId       String
+  playerId        String
+  originalProfitLoss Float
+  sessionCostShare Float
+  finalAmount     Float
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  session         GameSession @relation(fields: [sessionId], references: [id])
+  player          User        @relation(fields: [playerId], references: [id])
+
+  @@index([sessionId])
+  @@index([playerId])
+  @@unique([sessionId, playerId])
 }
 
 enum SessionStatus {

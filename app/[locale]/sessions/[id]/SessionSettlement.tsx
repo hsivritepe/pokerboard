@@ -61,28 +61,60 @@ export default function SessionSettlement({
         any[] | null
     >(null);
 
-    // Fetch the current session cost when the component loads
+    // Fetch the current session cost and settlement results when the component loads
     useEffect(() => {
-        const fetchSessionCost = async () => {
+        const fetchSessionData = async () => {
             try {
-                const response = await fetch(
+                // Fetch session cost
+                const sessionResponse = await fetch(
                     `/api/sessions/${sessionId}`
                 );
-                if (response.ok) {
-                    const data = await response.json();
+                if (sessionResponse.ok) {
+                    const sessionData = await sessionResponse.json();
                     if (
-                        data.sessionCost !== null &&
-                        data.sessionCost !== undefined
+                        sessionData.sessionCost !== null &&
+                        sessionData.sessionCost !== undefined
                     ) {
-                        setSessionCost(data.sessionCost);
+                        setSessionCost(sessionData.sessionCost);
+                    }
+                }
+
+                // Fetch existing settlement results
+                const settlementResponse = await fetch(
+                    `/api/sessions/${sessionId}/settlement`
+                );
+                if (settlementResponse.ok) {
+                    const settlementData =
+                        await settlementResponse.json();
+                    if (
+                        settlementData.settlementResults &&
+                        settlementData.settlementResults.length > 0
+                    ) {
+                        // Convert database format to component format
+                        const formattedSettlements =
+                            settlementData.settlementResults.map(
+                                (item: any) => ({
+                                    id: item.player.id,
+                                    userId: item.player.id,
+                                    user: {
+                                        name: item.player.name,
+                                        email: item.player.email,
+                                    },
+                                    profitLoss:
+                                        item.originalProfitLoss,
+                                    costShare: item.sessionCostShare,
+                                    finalProfit: item.finalAmount,
+                                })
+                            );
+                        setSavedSettlement(formattedSettlements);
                     }
                 }
             } catch (error) {
-                console.error('Error fetching session cost:', error);
+                console.error('Error fetching session data:', error);
             }
         };
 
-        fetchSessionCost();
+        fetchSessionData();
     }, [sessionId]);
 
     // Function to save the session cost
@@ -304,25 +336,44 @@ export default function SessionSettlement({
     };
 
     const handleSaveSettlement = async () => {
-        // Calculate and save the settlement results
-        const settlementResults = calculateSettlement(
-            Number(sessionCost)
-        );
-        console.log(
-            'Settlement results calculated:',
-            settlementResults
-        );
-        console.log('Session cost:', sessionCost);
-        console.log('Settled players:', settledPlayers);
-        setSavedSettlement(settlementResults);
+        try {
+            setIsLoading(true);
 
-        // Here you would implement saving the settlement to the database
-        // For now, we'll just show a success toast
-        showToast(
-            t('toast.settlementCalculatedSuccessfully'),
-            'success'
-        );
-        setSettlementDialogOpen(false);
+            // Calculate the settlement results
+            const settlementResults = calculateSettlement(
+                Number(sessionCost)
+            );
+
+            // Save to database
+            const response = await fetch(
+                `/api/sessions/${sessionId}/settlement`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ settlementResults }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Failed to save settlement results');
+            }
+
+            // Update local state
+            setSavedSettlement(settlementResults);
+
+            showToast(
+                t('toast.settlementCalculatedSuccessfully'),
+                'success'
+            );
+            setSettlementDialogOpen(false);
+        } catch (error) {
+            console.error('Error saving settlement:', error);
+            showToast('Failed to save settlement results', 'error');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     // Only show the settlement button if all players have cashed out and the session is completed
@@ -634,10 +685,6 @@ export default function SessionSettlement({
                     </div>
 
                     {/* Saved Settlement Results Table */}
-                    {console.log(
-                        'Rendering - savedSettlement state:',
-                        savedSettlement
-                    )}
                     {savedSettlement &&
                         savedSettlement.length > 0 && (
                             <div className="mt-8">

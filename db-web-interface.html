@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>PokerBoard Database Interface</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                background: #f5f5f5;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                color: #333;
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            .query-section {
+                margin: 20px 0;
+                padding: 15px;
+                background: #f8f9fa;
+                border-radius: 5px;
+            }
+            .query-section h3 {
+                color: #495057;
+                margin-top: 0;
+            }
+            button {
+                background: #007bff;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                margin: 5px;
+            }
+            button:hover {
+                background: #0056b3;
+            }
+            .result {
+                background: white;
+                border: 1px solid #ddd;
+                padding: 15px;
+                margin-top: 10px;
+                border-radius: 5px;
+                overflow-x: auto;
+            }
+            pre {
+                margin: 0;
+                white-space: pre-wrap;
+            }
+            .error {
+                color: #dc3545;
+                background: #f8d7da;
+                border: 1px solid #f5c6cb;
+            }
+            .success {
+                color: #155724;
+                background: #d4edda;
+                border: 1px solid #c3e6cb;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🗄️ PokerBoard Database Interface</h1>
+
+            <div class="query-section">
+                <h3>📊 Quick Queries</h3>
+                <button onclick="runQuery('sessions')">
+                    Show Recent Sessions
+                </button>
+                <button onclick="runQuery('players')">
+                    Show Latest Session Players
+                </button>
+                <button onclick="runQuery('transactions')">
+                    Show Latest Session Transactions
+                </button>
+                <button onclick="runQuery('settlement')">
+                    Calculate Settlement for Latest Session
+                </button>
+            </div>
+
+            <div class="query-section">
+                <h3>🔍 Custom Query</h3>
+                <textarea
+                    id="customQuery"
+                    rows="4"
+                    cols="80"
+                    placeholder="Enter your SQL query here..."
+                ></textarea
+                ><br />
+                <button onclick="runCustomQuery()">
+                    Execute Query
+                </button>
+            </div>
+
+            <div
+                id="result"
+                class="result"
+                style="display: none"
+            ></div>
+        </div>
+
+        <script>
+            async function runQuery(type) {
+                const queries = {
+                    sessions: `SELECT id, date, location, status, "sessionCost" FROM "GameSession" WHERE status = 'COMPLETED' ORDER BY "createdAt" DESC LIMIT 5;`,
+                    players: `SELECT ps."userId", u.name, u.email, ps."initialBuyIn", ps."currentStack", ps.status FROM "PlayerSession" ps JOIN "User" u ON ps."userId" = u.id WHERE ps."sessionId" = (SELECT id FROM "GameSession" WHERE status = 'COMPLETED' ORDER BY "createdAt" DESC LIMIT 1);`,
+                    transactions: `SELECT t."playerSessionId", u.name, t.type, t.amount, t."createdAt" FROM "Transaction" t JOIN "PlayerSession" ps ON t."playerSessionId" = ps.id JOIN "User" u ON ps."userId" = u.id WHERE ps."sessionId" = (SELECT id FROM "GameSession" WHERE status = 'COMPLETED' ORDER BY "createdAt" DESC LIMIT 1) ORDER BY t."createdAt";`,
+                    settlement: `SELECT u.name, ps."initialBuyIn", ps."currentStack", (ps."currentStack" - ps."initialBuyIn") as profit_loss FROM "PlayerSession" ps JOIN "User" u ON ps."userId" = u.id WHERE ps."sessionId" = (SELECT id FROM "GameSession" WHERE status = 'COMPLETED' ORDER BY "createdAt" DESC LIMIT 1) AND ps.status = 'CASHED_OUT';`,
+                };
+
+                await executeQuery(queries[type]);
+            }
+
+            async function runCustomQuery() {
+                const query =
+                    document.getElementById('customQuery').value;
+                if (!query.trim()) {
+                    showResult('Please enter a SQL query.', 'error');
+                    return;
+                }
+                await executeQuery(query);
+            }
+
+            async function executeQuery(query) {
+                showResult('Executing query...', 'info');
+
+                try {
+                    const response = await fetch('/api/db-query', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ query }),
+                    });
+
+                    const data = await response.json();
+
+                    if (data.error) {
+                        showResult(`Error: ${data.error}`, 'error');
+                    } else {
+                        showResult(
+                            JSON.stringify(data.result, null, 2),
+                            'success'
+                        );
+                    }
+                } catch (error) {
+                    showResult(
+                        `Connection Error: ${error.message}\n\nNote: This web interface requires a backend API endpoint. Use the Docker exec method instead:\n\ndocker exec -it pokerboard-db-1 psql -U postgres -d pokerboard`,
+                        'error'
+                    );
+                }
+            }
+
+            function showResult(content, type) {
+                const resultDiv = document.getElementById('result');
+                resultDiv.style.display = 'block';
+                resultDiv.className = `result ${type}`;
+                resultDiv.innerHTML = `<pre>${content}</pre>`;
+            }
+        </script>
+    </body>
+</html>
