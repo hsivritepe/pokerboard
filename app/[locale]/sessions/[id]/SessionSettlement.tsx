@@ -308,6 +308,12 @@ export default function SessionSettlement({
         const settlementResults = calculateSettlement(
             Number(sessionCost)
         );
+        console.log(
+            'Settlement results calculated:',
+            settlementResults
+        );
+        console.log('Session cost:', sessionCost);
+        console.log('Settled players:', settledPlayers);
         setSavedSettlement(settlementResults);
 
         // Here you would implement saving the settlement to the database
@@ -628,6 +634,10 @@ export default function SessionSettlement({
                     </div>
 
                     {/* Saved Settlement Results Table */}
+                    {console.log(
+                        'Rendering - savedSettlement state:',
+                        savedSettlement
+                    )}
                     {savedSettlement &&
                         savedSettlement.length > 0 && (
                             <div className="mt-8">
