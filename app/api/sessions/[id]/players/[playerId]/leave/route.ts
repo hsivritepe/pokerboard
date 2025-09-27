@@ -165,7 +165,7 @@ export async function POST(
                 // If this is the last active player, enforce the required cash out amount
                 if (activePlayers.length === 1) {
                     return new NextResponse(
-                        `To maintain balance, the last player must cash out with $${requiredCashOut.toFixed(
+                        `To maintain balance, the last player must cash out with ₺${requiredCashOut.toFixed(
                             2
                         )}. Please use this amount instead.`,
                         { status: 400 }
@@ -207,8 +207,8 @@ export async function POST(
         const profitLoss = leaveAmount - playerSession.initialBuyIn;
         const profitLossText =
             profitLoss >= 0
-                ? `+$${profitLoss.toFixed(2)}`
-                : `-$${Math.abs(profitLoss).toFixed(2)}`;
+                ? `+₺${profitLoss.toFixed(2)}`
+                : `-₺${Math.abs(profitLoss).toFixed(2)}`;
 
         console.log(
             'Player successfully left with amount:',
@@ -218,7 +218,7 @@ export async function POST(
 
         return NextResponse.json({
             ...updatedPlayerSession,
-            message: `Player has left the game with $${leaveAmount.toFixed(
+            message: `Player has left the game with ₺${leaveAmount.toFixed(
                 2
             )} (${profitLossText})`,
         });

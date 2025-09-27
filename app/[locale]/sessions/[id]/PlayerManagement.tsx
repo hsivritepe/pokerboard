@@ -338,7 +338,7 @@ export default function PlayerManagement({
                                         :
                                     </span>
                                     <span className="font-medium ml-1">
-                                        $
+                                        ₺
                                         {player.currentStack.toString()}
                                     </span>
                                 </div>
@@ -484,7 +484,7 @@ export default function PlayerManagement({
                                         ₺{totalBuyIn.toString()}
                                     </td>
                                     <td className="px-4 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-900">
-                                        $
+                                        ₺
                                         {player.currentStack.toString()}
                                     </td>
                                     <td className="px-4 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm">

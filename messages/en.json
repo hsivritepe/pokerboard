@@ -208,9 +208,6 @@
         "updated": "Session cost updated to ₺{amount}",
         "updatedSuccessfully": "Session cost updated successfully"
     },
-    "sessionStatus": {
-        "notActive": "Session is not active"
-    },
     "loading": {
         "adding": "Adding..."
     },
@@ -235,6 +232,16 @@
     "sessionStatus": {
         "ongoing": "Ongoing",
         "completed": "Completed",
-        "cancelled": "Cancelled"
+        "cancelled": "Cancelled",
+        "notActive": "Session is not active"
+    },
+    "toast": {
+        "playerCreatedSuccessfully": "Player created successfully",
+        "pleaseEnterPlayerName": "Please enter a player name",
+        "settlementCalculatedSuccessfully": "Settlement calculated successfully",
+        "playerDeletedSuccessfully": "Player deleted successfully",
+        "playerRestoredSuccessfully": "Player restored successfully",
+        "failedToDeleteSession": "Failed to delete session",
+        "sessionDeletedSuccessfully": "Session deleted successfully"
     }
 }

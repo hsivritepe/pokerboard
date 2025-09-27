@@ -122,9 +122,9 @@ export async function POST(
 
         return NextResponse.json({
             ...result,
-            message: `Added $${amount.toFixed(2)} to ${
+            message: `Added ₺${amount.toFixed(2)} to ${
                 playerSession.user.name
-            }'s stack. New total: $${(
+            }'s stack. New total: ₺${(
                 playerSession.currentStack + amount
             ).toFixed(2)}`,
         });

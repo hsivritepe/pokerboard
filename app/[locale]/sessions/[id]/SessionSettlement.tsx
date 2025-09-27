@@ -303,7 +303,10 @@ export default function SessionSettlement({
     const handleSaveSettlement = async () => {
         // Here you would implement saving the settlement to the database
         // For now, we'll just show a success toast
-        showToast('Settlement calculated successfully', 'success');
+        showToast(
+            t('toast.settlementCalculatedSuccessfully'),
+            'success'
+        );
         setSettlementDialogOpen(false);
     };
 
@@ -336,7 +339,7 @@ export default function SessionSettlement({
                             </Label>
                             <div className="relative flex-1">
                                 <span className="absolute inset-y-0 left-0 flex items-center pl-2 text-gray-500">
-                                    $
+                                    ₺
                                 </span>
                                 <Input
                                     id="sessionCost"
@@ -421,7 +424,7 @@ export default function SessionSettlement({
                                 {lastPlayerCashOut.playerName} should
                                 cash out with{' '}
                                 <span className="font-semibold">
-                                    $
+                                    ₺
                                     {lastPlayerCashOut.requiredCashOut.toString()}
                                 </span>{' '}
                                 to maintain balance.
@@ -433,7 +436,7 @@ export default function SessionSettlement({
                                         <>
                                             This is{' '}
                                             <span className="text-red-600 font-medium">
-                                                $
+                                                ₺
                                                 {lastPlayerCashOut.difference.toString()}
                                             </span>{' '}
                                             more than their current
@@ -443,7 +446,7 @@ export default function SessionSettlement({
                                         <>
                                             Their current stack is{' '}
                                             <span className="text-green-600 font-medium">
-                                                $
+                                                ₺
                                                 {Math.abs(
                                                     lastPlayerCashOut.difference
                                                 ).toString()}
@@ -515,7 +518,7 @@ export default function SessionSettlement({
                                         {player.profitLoss > 0
                                             ? '+'
                                             : ''}
-                                        $
+                                        ₺
                                         {player.profitLoss.toString()}
                                     </div>
                                 </div>
@@ -525,7 +528,7 @@ export default function SessionSettlement({
                                             Buy-in:
                                         </span>
                                         <span className="font-medium ml-1">
-                                            $
+                                            ₺
                                             {player.totalBuyIn.toString()}
                                         </span>
                                     </div>
@@ -534,7 +537,7 @@ export default function SessionSettlement({
                                             {t('settlement.cashOut')}:
                                         </span>
                                         <span className="font-medium ml-1">
-                                            $
+                                            ₺
                                             {player.currentStack.toString()}
                                         </span>
                                     </div>
@@ -583,11 +586,11 @@ export default function SessionSettlement({
                                             </div>
                                         </td>
                                         <td className="px-4 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-900">
-                                            $
+                                            ₺
                                             {player.totalBuyIn.toString()}
                                         </td>
                                         <td className="px-4 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-900">
-                                            $
+                                            ₺
                                             {player.currentStack.toString()}
                                         </td>
                                         <td className="px-4 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-right">
@@ -605,7 +608,7 @@ export default function SessionSettlement({
                                                 {player.profitLoss > 0
                                                     ? '+'
                                                     : ''}
-                                                $
+                                                ₺
                                                 {player.profitLoss.toString()}
                                             </span>
                                         </td>
@@ -629,7 +632,7 @@ export default function SessionSettlement({
                         </DialogTitle>
                         <DialogDescription>
                             {t('settlement.sessionCostDistributed', {
-                                amount: `₺${sessionCost.toString()}`,
+                                amount: `${sessionCost.toString()}`,
                             })}
                         </DialogDescription>
                     </DialogHeader>
@@ -668,7 +671,7 @@ export default function SessionSettlement({
                                                 {item.profitLoss > 0
                                                     ? '+'
                                                     : ''}
-                                                $
+                                                ₺
                                                 {item.profitLoss.toString()}
                                             </span>
                                         </div>
@@ -681,7 +684,7 @@ export default function SessionSettlement({
                                                     :
                                                 </span>
                                                 <span className="ml-1 font-medium text-red-600">
-                                                    -$
+                                                    -₺
                                                     {item.costShare.toString()}
                                                 </span>
                                             </div>
@@ -707,7 +710,7 @@ export default function SessionSettlement({
                                                 {item.finalProfit > 0
                                                     ? '+'
                                                     : ''}
-                                                $
+                                                ₺
                                                 {item.finalProfit.toString()}
                                             </span>
                                         </div>

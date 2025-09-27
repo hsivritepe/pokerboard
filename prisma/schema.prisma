@@ -25,6 +25,8 @@ model User {
   settlementsToPay     Settlement[]    @relation("payer")
   settlementsToReceive Settlement[]    @relation("receiver")
   transactions         Transaction[]
+
+  @@index([isDeleted, name])
 }
 
 model GameSession {

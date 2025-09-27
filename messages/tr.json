@@ -208,9 +208,6 @@
         "updated": "Oturum maliyeti ₺{amount} olarak güncellendi",
         "updatedSuccessfully": "Oturum maliyeti başarıyla güncellendi"
     },
-    "sessionStatus": {
-        "notActive": "Oturum aktif değil"
-    },
     "loading": {
         "adding": "Ekleniyor..."
     },
@@ -235,6 +232,16 @@
     "sessionStatus": {
         "ongoing": "Devam Ediyor",
         "completed": "Tamamlandı",
-        "cancelled": "İptal Edildi"
+        "cancelled": "İptal Edildi",
+        "notActive": "Oturum aktif değil"
+    },
+    "toast": {
+        "playerCreatedSuccessfully": "Oyuncu başarıyla oluşturuldu",
+        "pleaseEnterPlayerName": "Lütfen oyuncu adını girin",
+        "settlementCalculatedSuccessfully": "Hesaplama başarıyla yapıldı",
+        "playerDeletedSuccessfully": "Oyuncu başarıyla silindi",
+        "playerRestoredSuccessfully": "Oyuncu başarıyla geri yüklendi",
+        "failedToDeleteSession": "Oturum silinemedi",
+        "sessionDeletedSuccessfully": "Oturum başarıyla silindi"
     }
 }

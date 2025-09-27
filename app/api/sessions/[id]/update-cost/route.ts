@@ -74,7 +74,7 @@ export async function POST(
 
         return NextResponse.json({
             messageKey: 'sessionCost.updated',
-            messageParams: { amount: `$${sessionCost.toFixed(2)}` },
+            messageParams: { amount: `₺${sessionCost.toFixed(2)}` },
             sessionCost: sessionCost,
         });
     } catch (error) {

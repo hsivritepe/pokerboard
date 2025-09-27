@@ -126,10 +126,10 @@ export async function POST(
 
         const message =
             additionalBuyIn && additionalBuyIn > 0
-                ? `Player has rejoined the game with $${updatedPlayerSession.currentStack.toFixed(
+                ? `Player has rejoined the game with ₺${updatedPlayerSession.currentStack.toFixed(
                       2
-                  )} chips (added $${additionalBuyIn.toFixed(2)})`
-                : `Player has rejoined the game with $${updatedPlayerSession.currentStack.toFixed(
+                  )} chips (added ₺${additionalBuyIn.toFixed(2)})`
+                : `Player has rejoined the game with ₺${updatedPlayerSession.currentStack.toFixed(
                       2
                   )} chips`;
 

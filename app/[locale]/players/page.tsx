@@ -48,6 +48,20 @@ interface PlayerStats {
     isDeleted: boolean;
 }
 
+interface PaginationInfo {
+    page: number;
+    limit: number;
+    totalCount: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+}
+
+interface UsersResponse {
+    users: PlayerStats[];
+    pagination: PaginationInfo;
+}
+
 type SortField =
     | 'name'
     | 'totalGames'
@@ -84,6 +98,9 @@ export default function PlayersPage({ params }: Props) {
     const [newPlayerEmail, setNewPlayerEmail] = useState('');
     const [isCreating, setIsCreating] = useState(false);
     const [showDeleted, setShowDeleted] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pagination, setPagination] =
+        useState<PaginationInfo | null>(null);
     const { showToast } = useToast();
 
     useEffect(() => {
@@ -97,7 +114,9 @@ export default function PlayersPage({ params }: Props) {
             try {
                 setIsLoading(true);
                 setError(null); // Reset error state
-                const response = await fetch('/api/users');
+                const response = await fetch(
+                    `/api/users?page=${currentPage}&limit=50`
+                );
 
                 if (!response.ok) {
                     const errorText = await response.text();
@@ -111,12 +130,13 @@ export default function PlayersPage({ params }: Props) {
                     );
                 }
 
-                const data = await response.json();
-                if (!Array.isArray(data)) {
+                const data: UsersResponse = await response.json();
+                if (!data.users || !Array.isArray(data.users)) {
                     throw new Error('Invalid response format');
                 }
 
-                setPlayers(data);
+                setPlayers(data.users);
+                setPagination(data.pagination);
             } catch (err) {
                 console.error('Error fetching players:', err);
                 setError(
@@ -130,7 +150,7 @@ export default function PlayersPage({ params }: Props) {
         };
 
         fetchPlayers();
-    }, [session, status, router]);
+    }, [session, status, router, currentPage]);
 
     const handleDeleteClick = (player: PlayerStats) => {
         setPlayerToDelete(player);
@@ -184,7 +204,7 @@ export default function PlayersPage({ params }: Props) {
 
     const handleCreatePlayer = async () => {
         if (!newPlayerName.trim()) {
-            showToast('Please enter a player name', 'error');
+            showToast(t('toast.pleaseEnterPlayerName'), 'error');
             return;
         }
 
@@ -224,7 +244,10 @@ export default function PlayersPage({ params }: Props) {
             setIsCreateModalOpen(false);
             setNewPlayerName('');
             setNewPlayerEmail('');
-            showToast('Player created successfully', 'success');
+            showToast(
+                t('toast.playerCreatedSuccessfully'),
+                'success'
+            );
         } catch (error) {
             console.error('Error creating player:', error);
             showToast(
@@ -497,10 +520,10 @@ export default function PlayersPage({ params }: Props) {
                                             {player.totalGames}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            ${player.totalBuyIns}
+                                            ₺{player.totalBuyIns}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            ${player.totalCashouts}
+                                            ₺{player.totalCashouts}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <span
@@ -514,7 +537,7 @@ export default function PlayersPage({ params }: Props) {
                                                         : 'text-gray-500'
                                                 }`}
                                             >
-                                                ${player.netProfit}
+                                                ₺{player.netProfit}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm space-x-3">
@@ -555,6 +578,69 @@ export default function PlayersPage({ params }: Props) {
                             </tbody>
                         </table>
                     </div>
+
+                    {/* Pagination Controls */}
+                    {pagination && pagination.totalPages > 1 && (
+                        <div className="px-4 py-3 border-t border-gray-200 sm:px-6">
+                            <div className="flex items-center justify-between">
+                                <div className="text-sm text-gray-700">
+                                    Showing{' '}
+                                    <span className="font-medium">
+                                        {(pagination.page - 1) *
+                                            pagination.limit +
+                                            1}
+                                    </span>{' '}
+                                    to{' '}
+                                    <span className="font-medium">
+                                        {Math.min(
+                                            pagination.page *
+                                                pagination.limit,
+                                            pagination.totalCount
+                                        )}
+                                    </span>{' '}
+                                    of{' '}
+                                    <span className="font-medium">
+                                        {pagination.totalCount}
+                                    </span>{' '}
+                                    results
+                                </div>
+                                <div className="flex space-x-2">
+                                    <Button
+                                        variant="outline"
+                                        onClick={() =>
+                                            setCurrentPage(
+                                                currentPage - 1
+                                            )
+                                        }
+                                        disabled={
+                                            !pagination.hasPrev ||
+                                            isLoading
+                                        }
+                                    >
+                                        Previous
+                                    </Button>
+                                    <span className="flex items-center px-3 py-2 text-sm text-gray-700">
+                                        Page {pagination.page} of{' '}
+                                        {pagination.totalPages}
+                                    </span>
+                                    <Button
+                                        variant="outline"
+                                        onClick={() =>
+                                            setCurrentPage(
+                                                currentPage + 1
+                                            )
+                                        }
+                                        disabled={
+                                            !pagination.hasNext ||
+                                            isLoading
+                                        }
+                                    >
+                                        Next
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 

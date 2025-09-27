@@ -107,58 +107,71 @@ export async function GET(request: Request) {
             return new NextResponse('Forbidden', { status: 403 });
         }
 
-        // Debugging: Log available fields in the User model
-        console.log(
-            'Available fields in User model:',
-            prisma.user.fields
-        );
+        // Parse query parameters for pagination
+        const { searchParams } = new URL(request.url);
+        const page = parseInt(searchParams.get('page') || '1');
+        const limit = parseInt(searchParams.get('limit') || '50');
+        const offset = (page - 1) * limit;
 
-        // Get all users with their player sessions
-        const users = await prisma.user.findMany({
-            where: {}, // Include all users, both deleted and non-deleted
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                isDeleted: true,
-                playerSessions: {
-                    select: {
-                        initialBuyIn: true,
-                        currentStack: true,
-                    },
-                },
-            },
-            orderBy: {
-                name: 'asc',
-            },
-        });
+        // Use a single optimized query with database aggregation and pagination
+        // This query efficiently calculates all statistics in the database without loading unnecessary data
+        const usersWithStats = (await prisma.$queryRaw`
+            SELECT
+                u.id,
+                u.name,
+                u.email,
+                u."isDeleted",
+                COUNT(ps.id) as "totalGames",
+                COALESCE(SUM(ps."initialBuyIn"), 0) as "totalBuyIns",
+                COALESCE(SUM(ps."currentStack"), 0) as "totalCashouts",
+                COALESCE(SUM(ps."currentStack"), 0) - COALESCE(SUM(ps."initialBuyIn"), 0) as "netProfit"
+            FROM "User" u
+            LEFT JOIN "PlayerSession" ps ON u.id = ps."userId"
+            GROUP BY u.id, u.name, u.email, u."isDeleted"
+            ORDER BY u.name ASC
+            LIMIT ${limit} OFFSET ${offset}
+        `) as Array<{
+            id: string;
+            name: string | null;
+            email: string | null;
+            isDeleted: boolean;
+            totalGames: bigint;
+            totalBuyIns: number;
+            totalCashouts: number;
+            netProfit: number;
+        }>;
 
-        // Calculate statistics for each user
-        const usersWithStats = users.map((user) => {
-            const totalGames = user.playerSessions.length;
-            const totalBuyIns = user.playerSessions.reduce(
-                (sum, session) => sum + session.initialBuyIn,
-                0
-            );
-            const totalCashouts = user.playerSessions.reduce(
-                (sum, session) => sum + session.currentStack,
-                0
-            );
-            const netProfit = totalCashouts - totalBuyIns;
+        // Get total count for pagination
+        const totalCountResult = (await prisma.$queryRaw`
+            SELECT COUNT(*) as count FROM "User"
+        `) as Array<{ count: bigint }>;
+        const totalCount = Number(totalCountResult[0].count);
 
-            return {
+        // Convert BigInt to number for JSON serialization
+        const usersWithCalculatedStats = usersWithStats.map(
+            (user) => ({
                 id: user.id,
                 name: user.name,
                 email: user.email,
                 isDeleted: user.isDeleted,
-                totalGames,
-                totalBuyIns,
-                totalCashouts,
-                netProfit,
-            };
-        });
+                totalGames: Number(user.totalGames),
+                totalBuyIns: user.totalBuyIns,
+                totalCashouts: user.totalCashouts,
+                netProfit: user.netProfit,
+            })
+        );
 
-        return NextResponse.json(usersWithStats);
+        return NextResponse.json({
+            users: usersWithCalculatedStats,
+            pagination: {
+                page,
+                limit,
+                totalCount,
+                totalPages: Math.ceil(totalCount / limit),
+                hasNext: page < Math.ceil(totalCount / limit),
+                hasPrev: page > 1,
+            },
+        });
     } catch (error) {
         console.error('Error fetching users:', error);
         return new NextResponse(
