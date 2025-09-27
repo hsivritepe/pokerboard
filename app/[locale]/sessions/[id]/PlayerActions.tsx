@@ -277,7 +277,9 @@ export default function PlayerActions({
                         onClick={() => setLeaveDialogOpen(true)}
                         disabled={isLoading}
                     >
-                        {isLoading ? 'Processing...' : 'Leave Game'}
+                        {isLoading
+                            ? t('playerManagement.processing')
+                            : t('playerManagement.leaveGame')}
                     </Button>
                     <Button
                         variant="outline"
@@ -285,7 +287,9 @@ export default function PlayerActions({
                         onClick={() => setAddChipsDialogOpen(true)}
                         disabled={isLoading}
                     >
-                        {isLoading ? 'Processing...' : 'Add Chips'}
+                        {isLoading
+                            ? t('playerManagement.processing')
+                            : t('playerManagement.addChips')}
                     </Button>
                 </>
             ) : (
@@ -308,7 +312,9 @@ export default function PlayerActions({
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Leave Game</DialogTitle>
+                        <DialogTitle>
+                            {t('playerManagement.leaveGame')}
+                        </DialogTitle>
                         <DialogDescription>
                             {playerName} will leave the game. Please
                             specify how many chips they are cashing
@@ -398,8 +404,8 @@ export default function PlayerActions({
                             disabled={isLoading}
                         >
                             {isLoading
-                                ? 'Processing...'
-                                : 'Leave Game'}
+                                ? t('playerManagement.processing')
+                                : t('playerManagement.leaveGame')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -488,7 +494,9 @@ export default function PlayerActions({
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Add Chips</DialogTitle>
+                        <DialogTitle>
+                            {t('playerManagement.addChips')}
+                        </DialogTitle>
                         <DialogDescription>
                             Add more chips to {playerName}'s stack.
                             Available chips: $
@@ -546,8 +554,8 @@ export default function PlayerActions({
                             disabled={isLoading}
                         >
                             {isLoading
-                                ? 'Processing...'
-                                : 'Add Chips'}
+                                ? t('playerManagement.processing')
+                                : t('playerManagement.addChips')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

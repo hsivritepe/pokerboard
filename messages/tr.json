@@ -132,7 +132,9 @@
         "selectPlayer": "Oyuncu Seç",
         "selectAPlayer": "Oyuncu seçin...",
         "cancel": "İptal",
-        "loadingUsers": "Oyuncular yükleniyor..."
+        "loadingUsers": "Oyuncular yükleniyor...",
+        "leaveGame": "Oyundan Ayrıl",
+        "addChips": "Chip Ekle"
     },
     "playerStatus": {
         "active": "Aktif",

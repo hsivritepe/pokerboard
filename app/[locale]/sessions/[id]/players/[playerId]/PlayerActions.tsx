@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 interface PlayerActionsProps {
     sessionId: string;
@@ -21,6 +22,7 @@ export default function PlayerActions({
     isSelf,
 }: PlayerActionsProps) {
     const router = useRouter();
+    const t = useTranslations();
     const [isAddingChips, setIsAddingChips] = useState(false);
     const [isCashingOut, setIsCashingOut] = useState(false);
     const [amount, setAmount] = useState('');
@@ -133,7 +135,7 @@ export default function PlayerActions({
                                 : 'bg-green-600 text-white hover:bg-green-700'
                         }`}
                     >
-                        Add Chips
+                        {t('playerManagement.addChips')}
                     </button>
                     <button
                         onClick={() => {
@@ -156,7 +158,9 @@ export default function PlayerActions({
             {(isAddingChips || isCashingOut) && (
                 <div className="bg-gray-50 p-4 rounded-lg space-y-4">
                     <h3 className="font-medium">
-                        {isAddingChips ? 'Add Chips' : 'Cash Out'}
+                        {isAddingChips
+                            ? t('playerManagement.addChips')
+                            : t('playerManagement.cashOut')}
                     </h3>
                     <div className="space-y-4">
                         <div>
@@ -205,10 +209,10 @@ export default function PlayerActions({
                                 className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 disabled:opacity-50"
                             >
                                 {isLoading
-                                    ? 'Processing...'
+                                    ? t('playerManagement.processing')
                                     : isAddingChips
-                                    ? 'Add Chips'
-                                    : 'Cash Out'}
+                                    ? t('playerManagement.addChips')
+                                    : t('playerManagement.cashOut')}
                             </button>
                         </div>
                     </div>

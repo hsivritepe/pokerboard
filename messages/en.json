@@ -132,7 +132,9 @@
         "selectPlayer": "Select Player",
         "selectAPlayer": "Select a player...",
         "cancel": "Cancel",
-        "loadingUsers": "Loading users..."
+        "loadingUsers": "Loading users...",
+        "leaveGame": "Leave Game",
+        "addChips": "Add Chips"
     },
     "playerStatus": {
         "active": "Active",

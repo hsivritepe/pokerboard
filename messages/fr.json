@@ -105,6 +105,10 @@
         "defaultConfirmText": "Confirmer",
         "defaultCancelText": "Annuler"
     },
+    "playerManagement": {
+        "leaveGame": "Quitter le jeu",
+        "addChips": "Ajouter des jetons"
+    },
     "toast": {
         "playerCreatedSuccessfully": "Joueur créé avec succès",
         "pleaseEnterPlayerName": "Veuillez entrer un nom de joueur",
