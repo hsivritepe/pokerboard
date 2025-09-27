@@ -87,7 +87,12 @@
         "pleaseFillAllRequiredFields": "Bitte füllen Sie alle erforderlichen Felder aus und fügen Sie mindestens einen Spieler hinzu",
         "failedToCreateGameSession": "Fehler beim Erstellen der Spielsitzung",
         "anErrorOccurred": "Ein Fehler ist aufgetreten",
-        "createGameSession": "Spielsitzung erstellen"
+        "createGameSession": "Spielsitzung erstellen",
+        "selectPlayers": "Spieler auswählen",
+        "selectAllAvailable": "Alle verfügbaren auswählen",
+        "clearSelection": "Auswahl löschen",
+        "addSelected": "Ausgewählte hinzufügen",
+        "pleaseSelectAtLeastOnePlayer": "Bitte wählen Sie mindestens einen Spieler aus"
     },
     "status": {
         "ongoing": "LAUFEND",

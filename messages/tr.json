@@ -88,7 +88,12 @@
         "pleaseFillAllRequiredFields": "Lütfen tüm gerekli alanları doldurun ve en az bir oyuncu ekleyin",
         "failedToCreateGameSession": "Oyun oturumu oluşturulamadı",
         "anErrorOccurred": "Bir hata oluştu",
-        "createGameSession": "Oyun oturumu oluştur"
+        "createGameSession": "Oyun oturumu oluştur",
+        "selectPlayers": "Oyuncuları Seç",
+        "selectAllAvailable": "Tüm Mevcutları Seç",
+        "clearSelection": "Seçimi Temizle",
+        "addSelected": "Seçilenleri Ekle",
+        "pleaseSelectAtLeastOnePlayer": "Lütfen en az bir oyuncu seçin"
     },
     "status": {
         "ongoing": "DEVAM EDİYOR",

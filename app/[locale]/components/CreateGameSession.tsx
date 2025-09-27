@@ -29,9 +29,11 @@ export default function CreateGameSession({
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [players, setPlayers] = useState<Player[]>([]);
-    const [selectedUserId, setSelectedUserId] = useState<string>('');
+    const [selectedUserIds, setSelectedUserIds] = useState<string[]>(
+        []
+    );
     const [minBuyIn, setMinBuyIn] = useState<number>(1000);
-    const [buyInAmount, setBuyInAmount] = useState<string>(
+    const [bulkBuyInAmount, setBulkBuyInAmount] = useState<string>(
         minBuyIn.toString()
     );
 
@@ -41,16 +43,29 @@ export default function CreateGameSession({
     ) => {
         const value = parseFloat(e.target.value);
         setMinBuyIn(value);
-        setBuyInAmount(value.toString());
+        setBulkBuyInAmount(value.toString());
     };
 
-    const addPlayer = () => {
-        if (!selectedUserId || !buyInAmount) {
-            setError(t('session.pleaseSelectPlayerAndEnterBuyIn'));
+    const handlePlayerSelection = (
+        userId: string,
+        isSelected: boolean
+    ) => {
+        if (isSelected) {
+            setSelectedUserIds([...selectedUserIds, userId]);
+        } else {
+            setSelectedUserIds(
+                selectedUserIds.filter((id) => id !== userId)
+            );
+        }
+    };
+
+    const addSelectedPlayers = () => {
+        if (selectedUserIds.length === 0) {
+            setError(t('session.pleaseSelectAtLeastOnePlayer'));
             return;
         }
 
-        const amount = parseFloat(buyInAmount);
+        const amount = parseFloat(bulkBuyInAmount);
         if (isNaN(amount) || amount < minBuyIn) {
             setError(
                 t('session.buyInAmountMustBeAtLeast', { minBuyIn })
@@ -58,19 +73,29 @@ export default function CreateGameSession({
             return;
         }
 
-        // Check if player is already added
-        if (players.some((p) => p.userId === selectedUserId)) {
-            setError(t('session.playerAlreadyAdded'));
-            return;
-        }
+        // Add all selected players with the same buy-in amount
+        const newPlayers = selectedUserIds.map((userId) => ({
+            userId,
+            initialBuyIn: amount,
+        }));
 
-        setPlayers([
-            ...players,
-            { userId: selectedUserId, initialBuyIn: amount },
-        ]);
-        setSelectedUserId('');
-        setBuyInAmount(minBuyIn.toString());
+        setPlayers([...players, ...newPlayers]);
+        setSelectedUserIds([]);
+        setBulkBuyInAmount(minBuyIn.toString());
         setError(null);
+    };
+
+    const selectAllPlayers = () => {
+        const availableUserIds = users
+            .filter(
+                (user) => !players.some((p) => p.userId === user.id)
+            )
+            .map((user) => user.id);
+        setSelectedUserIds(availableUserIds);
+    };
+
+    const clearSelection = () => {
+        setSelectedUserIds([]);
     };
 
     const removePlayer = (userId: string) => {
@@ -210,17 +235,33 @@ export default function CreateGameSession({
                         {t('session.addPlayers')}
                     </h3>
 
-                    <div className="flex gap-2 mb-4">
-                        <select
-                            value={selectedUserId}
-                            onChange={(e) =>
-                                setSelectedUserId(e.target.value)
-                            }
-                            className="flex-1 rounded-md border border-gray-300 shadow-sm p-2 text-gray-900"
-                        >
-                            <option value="">
-                                {t('common.selectPlayer')}
-                            </option>
+                    {/* Bulk Selection Controls */}
+                    <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+                        <div className="flex items-center justify-between mb-3">
+                            <h4 className="text-sm font-medium text-gray-700">
+                                {t('session.selectPlayers')} (
+                                {selectedUserIds.length} selected)
+                            </h4>
+                            <div className="flex gap-2">
+                                <button
+                                    type="button"
+                                    onClick={selectAllPlayers}
+                                    className="px-3 py-1 text-xs bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                                >
+                                    {t('session.selectAllAvailable')}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={clearSelection}
+                                    className="px-3 py-1 text-xs bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                                >
+                                    {t('session.clearSelection')}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Player Selection Grid */}
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-4 max-h-48 overflow-y-auto">
                             {users
                                 .filter(
                                     (user) =>
@@ -230,32 +271,55 @@ export default function CreateGameSession({
                                         )
                                 )
                                 .map((user) => (
-                                    <option
+                                    <label
                                         key={user.id}
-                                        value={user.id}
+                                        className="flex items-center space-x-2 p-2 bg-white rounded border hover:bg-gray-50 cursor-pointer"
                                     >
-                                        {user.name}
-                                    </option>
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedUserIds.includes(
+                                                user.id
+                                            )}
+                                            onChange={(e) =>
+                                                handlePlayerSelection(
+                                                    user.id,
+                                                    e.target.checked
+                                                )
+                                            }
+                                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        />
+                                        <span className="text-sm text-gray-900 truncate">
+                                            {user.name}
+                                        </span>
+                                    </label>
                                 ))}
-                        </select>
-                        <input
-                            type="number"
-                            value={buyInAmount}
-                            onChange={(e) =>
-                                setBuyInAmount(e.target.value)
-                            }
-                            placeholder={t('common.buyInAmount')}
-                            min={minBuyIn}
-                            step="0.01"
-                            className="w-32 rounded-md border border-gray-300 shadow-sm p-2 text-gray-900"
-                        />
-                        <button
-                            type="button"
-                            onClick={addPlayer}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                        >
-                            {t('common.add')}
-                        </button>
+                        </div>
+
+                        {/* Bulk Buy-in Input */}
+                        <div className="flex gap-2">
+                            <input
+                                type="number"
+                                value={bulkBuyInAmount}
+                                onChange={(e) =>
+                                    setBulkBuyInAmount(e.target.value)
+                                }
+                                placeholder={t('common.buyInAmount')}
+                                min={minBuyIn}
+                                step="0.01"
+                                className="flex-1 rounded-md border border-gray-300 shadow-sm p-2 text-gray-900"
+                            />
+                            <button
+                                type="button"
+                                onClick={addSelectedPlayers}
+                                disabled={
+                                    selectedUserIds.length === 0
+                                }
+                                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                            >
+                                {t('session.addSelected')} (
+                                {selectedUserIds.length})
+                            </button>
+                        </div>
                     </div>
 
                     {players.length > 0 && (

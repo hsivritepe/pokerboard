@@ -88,7 +88,12 @@
         "pleaseFillAllRequiredFields": "Please fill in all required fields and add at least one player",
         "failedToCreateGameSession": "Failed to create game session",
         "anErrorOccurred": "An error occurred",
-        "createGameSession": "Create Game Session"
+        "createGameSession": "Create Game Session",
+        "selectPlayers": "Select Players",
+        "selectAllAvailable": "Select All Available",
+        "clearSelection": "Clear Selection",
+        "addSelected": "Add Selected",
+        "pleaseSelectAtLeastOnePlayer": "Please select at least one player"
     },
     "status": {
         "ongoing": "ONGOING",

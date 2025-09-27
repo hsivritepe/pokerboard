@@ -87,7 +87,12 @@
         "pleaseFillAllRequiredFields": "Veuillez remplir tous les champs requis et ajouter au moins un joueur",
         "failedToCreateGameSession": "Échec de la création de la session de jeu",
         "anErrorOccurred": "Une erreur s'est produite",
-        "createGameSession": "Créer une session de jeu"
+        "createGameSession": "Créer une session de jeu",
+        "selectPlayers": "Sélectionner les joueurs",
+        "selectAllAvailable": "Sélectionner tous les disponibles",
+        "clearSelection": "Effacer la sélection",
+        "addSelected": "Ajouter les sélectionnés",
+        "pleaseSelectAtLeastOnePlayer": "Veuillez sélectionner au moins un joueur"
     },
     "status": {
         "ongoing": "EN COURS",
