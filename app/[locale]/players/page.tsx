@@ -106,7 +106,7 @@ export default function PlayersPage({ params }: Props) {
     useEffect(() => {
         if (status === 'loading') return;
         if (!session) {
-            router.push('/auth/signin');
+            router.push(`/${currentLocale}/auth/signin`);
             return;
         }
 

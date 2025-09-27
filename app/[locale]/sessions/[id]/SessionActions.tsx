@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { SessionStatus } from '@prisma/client';
 import { useToast } from '@/app/components/ui/toast-context';
 import { useTranslations } from 'next-intl';
@@ -20,6 +20,8 @@ export default function SessionActions({
     isAdmin,
 }: SessionActionsProps) {
     const router = useRouter();
+    const params = useParams();
+    const locale = params.locale as string;
     const [isLoading, setIsLoading] = useState(false);
     const { showToast } = useToast();
     const t = useTranslations();
@@ -91,7 +93,7 @@ export default function SessionActions({
                 t('sessionActions.sessionDeletedSuccessfully'),
                 'success'
             );
-            router.push('/sessions');
+            router.push(`/${locale}/sessions`);
         } catch (error) {
             console.error('Error deleting session:', error);
             showToast(

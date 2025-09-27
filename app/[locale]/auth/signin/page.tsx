@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import {
+    useRouter,
+    useSearchParams,
+    useParams,
+} from 'next/navigation';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
@@ -14,6 +18,8 @@ type ValidationErrors = {
 export default function SignIn() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const params = useParams();
+    const locale = params.locale as string;
     const t = useTranslations();
     const [error, setError] = useState<string | null>(null);
     const [validationErrors, setValidationErrors] =
@@ -88,7 +94,7 @@ export default function SignIn() {
                 return;
             }
 
-            router.push('/');
+            router.push(`/${locale}/`);
             router.refresh();
         } catch (error) {
             setError(t('auth.errorDuringSignIn'));

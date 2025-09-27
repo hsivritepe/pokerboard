@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 
 interface Player {
     userId: string;
@@ -22,6 +23,8 @@ export default function CreateGameSession({
     users: User[];
 }) {
     const router = useRouter();
+    const params = useParams();
+    const locale = params.locale as string;
     const t = useTranslations();
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -118,7 +121,7 @@ export default function CreateGameSession({
                 );
             }
 
-            router.push('/sessions');
+            router.push(`/${locale}/sessions`);
             router.refresh();
         } catch (error) {
             setError(
