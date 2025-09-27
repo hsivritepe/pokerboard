@@ -203,7 +203,11 @@
         "finalAmount": "Final Amount",
         "close": "Close",
         "saving": "Saving...",
-        "saveCost": "Save Cost"
+        "saveCost": "Save Cost",
+        "savedSettlementResults": "Saved Settlement Results",
+        "player": "Player",
+        "originalProfitLoss": "Original P&L",
+        "sessionCostShare": "Session Cost Share"
     },
     "profitLoss": {
         "profitLoss": "Profit/Loss",

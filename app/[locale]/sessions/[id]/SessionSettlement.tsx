@@ -57,6 +57,9 @@ export default function SessionSettlement({
         useState(false);
     const [error, setError] = useState('');
     const [isSavingCost, setIsSavingCost] = useState(false);
+    const [savedSettlement, setSavedSettlement] = useState<
+        any[] | null
+    >(null);
 
     // Fetch the current session cost when the component loads
     useEffect(() => {
@@ -301,6 +304,12 @@ export default function SessionSettlement({
     };
 
     const handleSaveSettlement = async () => {
+        // Calculate and save the settlement results
+        const settlementResults = calculateSettlement(
+            Number(sessionCost)
+        );
+        setSavedSettlement(settlementResults);
+
         // Here you would implement saving the settlement to the database
         // For now, we'll just show a success toast
         showToast(
@@ -617,6 +626,128 @@ export default function SessionSettlement({
                             </tbody>
                         </table>
                     </div>
+
+                    {/* Saved Settlement Results Table */}
+                    {savedSettlement &&
+                        savedSettlement.length > 0 && (
+                            <div className="mt-8">
+                                <h3 className="text-lg font-semibold mb-4 text-gray-900">
+                                    {t(
+                                        'settlement.savedSettlementResults'
+                                    )}
+                                </h3>
+                                <div className="overflow-x-auto">
+                                    <table className="min-w-full divide-y divide-gray-200">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                <th
+                                                    scope="col"
+                                                    className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                >
+                                                    {t(
+                                                        'settlement.player'
+                                                    )}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                >
+                                                    {t(
+                                                        'settlement.originalProfitLoss'
+                                                    )}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                >
+                                                    {t(
+                                                        'settlement.sessionCostShare'
+                                                    )}
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                >
+                                                    {t(
+                                                        'settlement.finalAmount'
+                                                    )}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-white divide-y divide-gray-200">
+                                            {savedSettlement.map(
+                                                (item) => (
+                                                    <tr key={item.id}>
+                                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                                            <div className="text-sm font-medium text-gray-900">
+                                                                {
+                                                                    item
+                                                                        .user
+                                                                        .name
+                                                                }
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
+                                                            <span
+                                                                className={
+                                                                    item.profitLoss >
+                                                                    0
+                                                                        ? 'text-green-600 font-semibold'
+                                                                        : item.profitLoss <
+                                                                          0
+                                                                        ? 'text-red-600 font-semibold'
+                                                                        : 'text-gray-900'
+                                                                }
+                                                            >
+                                                                {item.profitLoss >
+                                                                0
+                                                                    ? '+'
+                                                                    : ''}
+                                                                ₺
+                                                                {item.profitLoss.toString()}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
+                                                            {item.costShare >
+                                                            0 ? (
+                                                                <span className="text-red-600 font-medium">
+                                                                    -₺
+                                                                    {item.costShare.toString()}
+                                                                </span>
+                                                            ) : (
+                                                                <span className="text-gray-500">
+                                                                    ₺0.00
+                                                                </span>
+                                                            )}
+                                                        </td>
+                                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-right">
+                                                            <span
+                                                                className={
+                                                                    item.finalProfit >
+                                                                    0
+                                                                        ? 'text-green-600 font-semibold'
+                                                                        : item.finalProfit <
+                                                                          0
+                                                                        ? 'text-red-600 font-semibold'
+                                                                        : 'text-gray-900'
+                                                                }
+                                                            >
+                                                                {item.finalProfit >
+                                                                0
+                                                                    ? '+'
+                                                                    : ''}
+                                                                ₺
+                                                                {item.finalProfit.toString()}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
                 </div>
             )}
 

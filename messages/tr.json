@@ -203,7 +203,11 @@
         "finalAmount": "Son Miktar",
         "close": "Kapat",
         "saving": "Kaydediliyor...",
-        "saveCost": "Maliyeti Kaydet"
+        "saveCost": "Maliyeti Kaydet",
+        "savedSettlementResults": "Kaydedilen Hesaplama Sonuçları",
+        "player": "Oyuncu",
+        "originalProfitLoss": "Orijinal K/Z",
+        "sessionCostShare": "Oturum Maliyeti Payı"
     },
     "profitLoss": {
         "profitLoss": "Kar/Zarar",
