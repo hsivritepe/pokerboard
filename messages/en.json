@@ -134,7 +134,11 @@
         "cancel": "Cancel",
         "loadingUsers": "Loading users...",
         "leaveGame": "Leave Game",
-        "addChips": "Add Chips"
+        "addChips": "Add Chips",
+        "addMoreChipsToStack": "Add more chips to {playerName}'s stack.",
+        "availableChips": "Available chips: ${amount}",
+        "amountToAdd": "Amount to Add",
+        "enterAmount": "Enter amount"
     },
     "playerStatus": {
         "active": "Active",

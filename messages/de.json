@@ -107,7 +107,11 @@
     },
     "playerManagement": {
         "leaveGame": "Spiel verlassen",
-        "addChips": "Chips hinzufügen"
+        "addChips": "Chips hinzufügen",
+        "addMoreChipsToStack": "Fügen Sie mehr Chips zu {playerName}s Stack hinzu.",
+        "availableChips": "Verfügbare Chips: ${amount}",
+        "amountToAdd": "Hinzuzufügender Betrag",
+        "enterAmount": "Betrag eingeben"
     },
     "toast": {
         "playerCreatedSuccessfully": "Spieler erfolgreich erstellt",

@@ -134,7 +134,11 @@
         "cancel": "İptal",
         "loadingUsers": "Oyuncular yükleniyor...",
         "leaveGame": "Oyundan Ayrıl",
-        "addChips": "Chip Ekle"
+        "addChips": "Chip Ekle",
+        "addMoreChipsToStack": "{playerName}'nin stack'ine daha fazla chip ekle.",
+        "availableChips": "Mevcut chip: ₺{amount}",
+        "amountToAdd": "Eklenecek Miktar",
+        "enterAmount": "Miktar girin"
     },
     "playerStatus": {
         "active": "Aktif",

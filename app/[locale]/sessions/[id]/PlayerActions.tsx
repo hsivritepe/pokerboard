@@ -498,9 +498,13 @@ export default function PlayerActions({
                             {t('playerManagement.addChips')}
                         </DialogTitle>
                         <DialogDescription>
-                            Add more chips to {playerName}'s stack.
-                            Available chips: $
-                            {currentStack.toFixed(2)}
+                            {t(
+                                'playerManagement.addMoreChipsToStack',
+                                { playerName }
+                            )}
+                            {t('playerManagement.availableChips', {
+                                amount: currentStack.toFixed(2),
+                            })}
                         </DialogDescription>
                     </DialogHeader>
 
@@ -510,14 +514,16 @@ export default function PlayerActions({
                                 htmlFor="chipAmount"
                                 className="block mb-2"
                             >
-                                Amount to Add
+                                {t('playerManagement.amountToAdd')}
                             </Label>
                             <Input
                                 id="chipAmount"
                                 type="number"
                                 min="1"
                                 step="0.01"
-                                placeholder="Enter amount"
+                                placeholder={t(
+                                    'playerManagement.enterAmount'
+                                )}
                                 value={chipAmount}
                                 onChange={(e) => {
                                     const value = e.target.value;

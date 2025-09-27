@@ -107,7 +107,11 @@
     },
     "playerManagement": {
         "leaveGame": "Quitter le jeu",
-        "addChips": "Ajouter des jetons"
+        "addChips": "Ajouter des jetons",
+        "addMoreChipsToStack": "Ajouter plus de jetons au stack de {playerName}.",
+        "availableChips": "Jetons disponibles : ${amount}",
+        "amountToAdd": "Montant à Ajouter",
+        "enterAmount": "Entrez le montant"
     },
     "toast": {
         "playerCreatedSuccessfully": "Joueur créé avec succès",
