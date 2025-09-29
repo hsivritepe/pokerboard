@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
+import { formatNumber } from '@/lib/utils';
 
 interface Player {
     userId: string;
@@ -29,13 +30,66 @@ export default function CreateGameSession({
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [players, setPlayers] = useState<Player[]>([]);
+    // Helper function to format date for Turkish locale (dd.mm.yyyy)
+    const formatDateForInput = (date: Date): string => {
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1)
+            .toString()
+            .padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+    };
+
+    // Helper function to get current date/time in Turkish format
+    const getCurrentDateTime = (): string => {
+        const now = new Date();
+        return formatDateForInput(now);
+    };
+
     const [selectedUserIds, setSelectedUserIds] = useState<string[]>(
         []
     );
-    const [minBuyIn, setMinBuyIn] = useState<number>(1000);
+    const [minBuyIn, setMinBuyIn] = useState<number>(() => {
+        // Get the stored minimum buy-in from localStorage, default to 1000
+        if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem('minBuyIn');
+            return stored ? parseFloat(stored) : 1000;
+        }
+        return 1000;
+    });
     const [bulkBuyInAmount, setBulkBuyInAmount] = useState<string>(
         minBuyIn.toString()
     );
+    const [selectedDateTime, setSelectedDateTime] =
+        useState<string>('');
+
+    // Helper function to format date for display in Turkish format
+    const formatDateForDisplay = (dateString: string): string => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1)
+            .toString()
+            .padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${day}.${month}.${year}, ${hours}:${minutes}`;
+    };
+
+    // Update bulk buy-in amount when minBuyIn changes (including on mount)
+    useEffect(() => {
+        setBulkBuyInAmount(minBuyIn.toString());
+    }, [minBuyIn]);
+
+    // Set initial date/time on client side to avoid hydration mismatch
+    useEffect(() => {
+        if (!selectedDateTime) {
+            setSelectedDateTime(getCurrentDateTime());
+        }
+    }, [selectedDateTime]);
 
     // Update buy-in amount when minimum buy-in changes
     const handleMinBuyInChange = (
@@ -44,6 +98,11 @@ export default function CreateGameSession({
         const value = parseFloat(e.target.value);
         setMinBuyIn(value);
         setBulkBuyInAmount(value.toString());
+
+        // Store the value in localStorage
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('minBuyIn', value.toString());
+        }
     };
 
     const handlePlayerSelection = (
@@ -186,13 +245,31 @@ export default function CreateGameSession({
                     >
                         {t('session.dateAndTime')}
                     </label>
-                    <input
-                        type="datetime-local"
-                        id="date"
-                        name="date"
-                        required
-                        className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-2 text-gray-900"
-                    />
+                    <div
+                        className="mt-1 cursor-pointer"
+                        onClick={() => {
+                            const dateInput = document.getElementById(
+                                'date'
+                            ) as HTMLInputElement;
+                            if (dateInput) {
+                                dateInput.focus();
+                                dateInput.showPicker?.();
+                            }
+                        }}
+                    >
+                        <input
+                            type="datetime-local"
+                            id="date"
+                            name="date"
+                            required
+                            value={selectedDateTime}
+                            onChange={(e) =>
+                                setSelectedDateTime(e.target.value)
+                            }
+                            lang="tr" // Add this to set the calendar language to Turkish
+                            className="block w-full rounded-md border border-gray-300 shadow-sm p-2 text-gray-900 cursor-pointer"
+                        />
+                    </div>
                 </div>
 
                 <div>
@@ -202,12 +279,21 @@ export default function CreateGameSession({
                     >
                         {t('common.location')}
                     </label>
-                    <input
-                        type="text"
+                    <select
                         id="location"
                         name="location"
                         className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-2 text-gray-900"
-                    />
+                    >
+                        <option value="">
+                            {t('common.selectLocation')}
+                        </option>
+                        <option value="Allsancak Tontiş Bar">
+                            Allsancak Tontiş Bar
+                        </option>
+                        <option value="Can'ın Lokali">
+                            Can'ın Lokali
+                        </option>
+                    </select>
                 </div>
 
                 <div>
@@ -217,17 +303,26 @@ export default function CreateGameSession({
                     >
                         {t('common.minimumBuyInAmount')}
                     </label>
-                    <input
-                        type="number"
-                        id="minBuyIn"
-                        name="minBuyIn"
-                        min="0"
-                        step="0.01"
-                        required
-                        value={minBuyIn}
-                        onChange={handleMinBuyInChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-2 text-gray-900"
-                    />
+                    <div className="mt-1 relative">
+                        <span className="absolute left-3 top-2 text-gray-500 text-sm font-normal z-10">
+                            ₺
+                        </span>
+                        <input
+                            type="number"
+                            id="minBuyIn"
+                            name="minBuyIn"
+                            min="0"
+                            step="0.01"
+                            required
+                            value={minBuyIn}
+                            onChange={handleMinBuyInChange}
+                            className="block w-full rounded-md border border-gray-300 shadow-sm p-2 pl-10 text-gray-900"
+                        />
+                        <div className="mt-1 text-sm text-gray-600">
+                            {t('common.currentValue')}: ₺
+                            {formatNumber(minBuyIn)}
+                        </div>
+                    </div>
                 </div>
 
                 <div className="border-t border-gray-200 pt-4">

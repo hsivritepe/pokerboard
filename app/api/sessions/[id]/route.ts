@@ -51,15 +51,16 @@ export async function GET(
             });
         }
 
-        // Get the session cost using a raw query
+        // Get the session cost and discount using a raw query
         const sessionCostResult = await prisma.$queryRaw`
-            SELECT "sessionCost" FROM "GameSession" WHERE id = ${id}
+            SELECT "sessionCost", "discount" FROM "GameSession" WHERE id = ${id}
         `;
 
-        // Add the session cost to the response
+        // Add the session cost and discount to the response
         const sessionWithCost = {
             ...gameSession,
             sessionCost: sessionCostResult[0]?.sessionCost || null,
+            discount: sessionCostResult[0]?.discount || 0,
         };
 
         // Check if user has access to this session

@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { format } from 'date-fns';
 import { SessionStatus } from '@prisma/client';
+import { formatNumber } from '@/lib/utils';
 import type {
     User,
     GameSession,
@@ -128,7 +129,7 @@ export default async function SessionDetailPage({ params }: Props) {
                                 <span className="font-medium">
                                     Minimum Buy-in:
                                 </span>{' '}
-                                ${gameSession.buyIn}
+                                ${formatNumber(gameSession.buyIn)}
                             </div>
                             <div>
                                 <span className="font-medium">

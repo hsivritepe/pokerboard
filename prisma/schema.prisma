@@ -41,6 +41,7 @@ model GameSession {
   updatedAt    DateTime        @updatedAt
   hostId       String
   sessionCost  Float?
+  discount     Float?           @default(0)
   host         User            @relation("host", fields: [hostId], references: [id])
   participants PlayerSession[]
   settlements  Settlement[]

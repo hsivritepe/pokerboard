@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { formatNumber } from '@/lib/utils';
 
 type UserWithAdmin = {
     id: string;
@@ -126,11 +127,11 @@ export async function POST(
 
         const message =
             additionalBuyIn && additionalBuyIn > 0
-                ? `Player has rejoined the game with ₺${updatedPlayerSession.currentStack.toFixed(
-                      2
-                  )} chips (added ₺${additionalBuyIn.toFixed(2)})`
-                : `Player has rejoined the game with ₺${updatedPlayerSession.currentStack.toFixed(
-                      2
+                ? `Player has rejoined the game with ₺${formatNumber(
+                      updatedPlayerSession.currentStack
+                  )} chips (added ₺${formatNumber(additionalBuyIn)})`
+                : `Player has rejoined the game with ₺${formatNumber(
+                      updatedPlayerSession.currentStack
                   )} chips`;
 
         return NextResponse.json({

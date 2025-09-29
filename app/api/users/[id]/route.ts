@@ -160,7 +160,6 @@ export async function GET(
                                 date: true,
                                 location: true,
                                 status: true,
-                                gameType: true,
                                 buyIn: true,
                             },
                         },

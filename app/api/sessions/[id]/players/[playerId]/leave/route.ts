@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { formatNumber } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
 
 type UserWithAdmin = {
@@ -207,8 +208,8 @@ export async function POST(
         const profitLoss = leaveAmount - playerSession.initialBuyIn;
         const profitLossText =
             profitLoss >= 0
-                ? `+₺${profitLoss.toFixed(2)}`
-                : `-₺${Math.abs(profitLoss).toFixed(2)}`;
+                ? `+₺${formatNumber(profitLoss)}`
+                : `-₺${formatNumber(Math.abs(profitLoss))}`;
 
         console.log(
             'Player successfully left with amount:',

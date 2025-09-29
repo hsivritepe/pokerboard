@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { formatNumber } from '@/lib/utils';
 
 type UserWithAdmin = {
     id: string;
@@ -122,11 +123,11 @@ export async function POST(
 
         return NextResponse.json({
             ...result,
-            message: `Added ₺${amount.toFixed(2)} to ${
+            message: `Added ₺${formatNumber(amount)} to ${
                 playerSession.user.name
-            }'s stack. New total: ₺${(
+            }'s stack. New total: ₺${formatNumber(
                 playerSession.currentStack + amount
-            ).toFixed(2)}`,
+            )}`,
         });
     } catch (error) {
         console.error('Error adding chips:', error);

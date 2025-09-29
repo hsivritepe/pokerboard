@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/app/components/ui/toast-context';
 import { useTranslations } from 'next-intl';
+import { formatNumber } from '@/lib/utils';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
@@ -53,6 +54,7 @@ export default function SessionSettlement({
     const t = useTranslations();
     const [isLoading, setIsLoading] = useState(false);
     const [sessionCost, setSessionCost] = useState<number | ''>('');
+    const [discount, setDiscount] = useState<number | ''>('');
     const [settlementDialogOpen, setSettlementDialogOpen] =
         useState(false);
     const [error, setError] = useState('');
@@ -76,6 +78,12 @@ export default function SessionSettlement({
                         sessionData.sessionCost !== undefined
                     ) {
                         setSessionCost(sessionData.sessionCost);
+                    }
+                    if (
+                        sessionData.discount !== null &&
+                        sessionData.discount !== undefined
+                    ) {
+                        setDiscount(sessionData.discount);
                     }
                 }
 
@@ -140,6 +148,7 @@ export default function SessionSettlement({
                     },
                     body: JSON.stringify({
                         sessionCost: Number(sessionCost),
+                        discount: Number(discount) || 0,
                     }),
                 }
             );
@@ -274,41 +283,104 @@ export default function SessionSettlement({
     // Check if profits and losses balance
     const isBalanced = Math.abs(totalProfit - totalLoss) < 0.01; // Allow for small rounding errors
 
-    // Calculate settlement with session cost
-    const calculateSettlement = (cost: number) => {
-        // Only winners pay for the session cost
-        const winners = settledPlayers.filter(
-            (player) => player.profitLoss > 0
+    // Helper function to abbreviate names for mobile display
+    const abbreviateName = (fullName: string) => {
+        const names = fullName.split(' ');
+        if (names.length >= 2) {
+            return `${names[0].substring(0, 2)} ${names[1].substring(
+                0,
+                2
+            )}`;
+        }
+        return fullName.substring(0, 4);
+    };
+
+    // Calculate settlement with session cost and discount
+    const calculateSettlement = (
+        cost: number,
+        discountPercent: number = 0
+    ) => {
+        // Apply discount to ALL profit/loss values (both winners and losers)
+        const adjustedPlayers = settledPlayers.map((player) => {
+            const discountAmount = Math.round(
+                Math.abs(player.profitLoss) * (discountPercent / 100)
+            );
+            if (player.profitLoss > 0) {
+                // Apply discount to winners (reduce their profit)
+                return {
+                    ...player,
+                    adjustedProfitLoss: Math.round(
+                        player.profitLoss - discountAmount
+                    ),
+                    discountAmount,
+                };
+            } else if (player.profitLoss < 0) {
+                // Apply discount to losers (reduce their loss)
+                return {
+                    ...player,
+                    adjustedProfitLoss: Math.round(
+                        player.profitLoss + discountAmount
+                    ),
+                    discountAmount,
+                };
+            } else {
+                // No change for break-even players
+                return {
+                    ...player,
+                    adjustedProfitLoss: player.profitLoss,
+                    discountAmount: 0,
+                };
+            }
+        });
+
+        // Calculate new totals after discount
+        const adjustedTotalProfit = adjustedPlayers
+            .filter((player) => player.adjustedProfitLoss > 0)
+            .reduce(
+                (sum, player) => sum + player.adjustedProfitLoss,
+                0
+            );
+
+        // Only winners pay for the session cost (based on adjusted profits)
+        const winners = adjustedPlayers.filter(
+            (player) => player.adjustedProfitLoss > 0
         );
 
-        // Calculate cost distribution based on proportion of winnings
+        // Calculate cost distribution based on proportion of adjusted winnings
         const costDistribution = winners.map((player) => {
-            const proportion = player.profitLoss / totalProfit;
-            const costShare = cost * proportion;
+            const proportion =
+                player.adjustedProfitLoss / adjustedTotalProfit;
+            const costShare = Math.round(cost * proportion);
             return {
                 ...player,
                 costShare,
-                finalProfit: player.profitLoss - costShare,
+                finalProfit: Math.round(
+                    player.adjustedProfitLoss - costShare
+                ),
             };
         });
 
         // Calculate final settlement for all players
-        return settledPlayers.map((player) => {
-            if (player.profitLoss > 0) {
+        return adjustedPlayers.map((player) => {
+            if (player.adjustedProfitLoss > 0) {
                 const winner = costDistribution.find(
                     (w) => w.id === player.id
                 );
                 return {
                     ...player,
                     costShare: winner?.costShare || 0,
-                    finalProfit:
-                        winner?.finalProfit || player.profitLoss,
+                    finalProfit: Math.round(
+                        winner?.finalProfit ||
+                            player.adjustedProfitLoss
+                    ),
                 };
             } else {
                 return {
                     ...player,
                     costShare: 0,
-                    finalProfit: player.profitLoss,
+                    finalProfit: Math.round(
+                        player.adjustedProfitLoss
+                    ),
                 };
             }
         });
@@ -321,9 +393,7 @@ export default function SessionSettlement({
         }
 
         if (!isBalanced) {
-            const difference = Math.abs(
-                totalProfit - totalLoss
-            ).toFixed(2);
+            const difference = Math.abs(totalProfit - totalLoss);
             setError(
                 `Settlement imbalance detected: ₺${difference} difference between profits and losses. For accurate results, the total profits should equal the total losses. Please adjust player cash out amounts before calculating settlement.`
             );
@@ -341,7 +411,8 @@ export default function SessionSettlement({
 
             // Calculate the settlement results
             const settlementResults = calculateSettlement(
-                Number(sessionCost)
+                Number(sessionCost),
+                Number(discount) || 0
             );
 
             // Save to database
@@ -385,7 +456,10 @@ export default function SessionSettlement({
     // Calculate settlement with current session cost for display
     const settlement =
         sessionCost !== ''
-            ? calculateSettlement(Number(sessionCost))
+            ? calculateSettlement(
+                  Number(sessionCost),
+                  Number(discount) || 0
+              )
             : [];
 
     return (
@@ -425,6 +499,38 @@ export default function SessionSettlement({
                                     className="pl-5 h-9 text-sm"
                                     placeholder="0.00"
                                 />
+                            </div>
+                        </div>
+                        <div className="flex space-x-2 items-center">
+                            <Label
+                                htmlFor="discount"
+                                className="whitespace-nowrap text-sm"
+                            >
+                                {t('settlement.discount')}:
+                            </Label>
+                            <div className="relative flex-1">
+                                <Input
+                                    id="discount"
+                                    type="number"
+                                    min="0"
+                                    max="100"
+                                    step="0.01"
+                                    value={discount}
+                                    onChange={(e) =>
+                                        setDiscount(
+                                            e.target.value === ''
+                                                ? ''
+                                                : Number(
+                                                      e.target.value
+                                                  )
+                                        )
+                                    }
+                                    className="h-9 text-sm"
+                                    placeholder="0"
+                                />
+                                <span className="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-500 text-sm">
+                                    %
+                                </span>
                             </div>
                         </div>
                         <Button
@@ -554,136 +660,6 @@ export default function SessionSettlement({
                         </div>
                     </div>
 
-                    {/* Mobile player results */}
-                    <div className="sm:hidden space-y-4 mt-4">
-                        {settledPlayers.map((player) => (
-                            <div
-                                key={player.id}
-                                className={`p-3 rounded-lg ${
-                                    player.profitLoss > 0
-                                        ? 'bg-green-50'
-                                        : player.profitLoss < 0
-                                        ? 'bg-red-50'
-                                        : 'bg-gray-50'
-                                }`}
-                            >
-                                <div className="flex justify-between items-start">
-                                    <div className="text-sm font-medium">
-                                        {player.user.name}
-                                    </div>
-                                    <div
-                                        className={`text-sm font-semibold ${
-                                            player.profitLoss > 0
-                                                ? 'text-green-600'
-                                                : player.profitLoss <
-                                                  0
-                                                ? 'text-red-600'
-                                                : ''
-                                        }`}
-                                    >
-                                        {player.profitLoss > 0
-                                            ? '+'
-                                            : ''}
-                                        ₺
-                                        {player.profitLoss.toString()}
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 gap-2 mt-2 text-xs">
-                                    <div>
-                                        <span className="text-gray-500">
-                                            Buy-in:
-                                        </span>
-                                        <span className="font-medium ml-1">
-                                            ₺
-                                            {player.totalBuyIn.toString()}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span className="text-gray-500">
-                                            {t('settlement.cashOut')}:
-                                        </span>
-                                        <span className="font-medium ml-1">
-                                            ₺
-                                            {player.currentStack.toString()}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Desktop/Tablet player results */}
-                    <div className="hidden sm:block overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200 mt-4">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    <th
-                                        scope="col"
-                                        className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Player
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        {t('settlement.totalBuyIns')}
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        {t('settlement.cashOut')}
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-4 sm:px-6 py-2 sm:py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        {t('settlement.profitLoss')}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {settledPlayers.map((player) => (
-                                    <tr key={player.id}>
-                                        <td className="px-4 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
-                                            <div className="text-sm font-medium text-gray-900">
-                                                {player.user.name}
-                                            </div>
-                                        </td>
-                                        <td className="px-4 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-900">
-                                            ₺
-                                            {player.totalBuyIn.toString()}
-                                        </td>
-                                        <td className="px-4 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-900">
-                                            ₺
-                                            {player.currentStack.toString()}
-                                        </td>
-                                        <td className="px-4 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-right">
-                                            <span
-                                                className={
-                                                    player.profitLoss >
-                                                    0
-                                                        ? 'text-green-600 font-semibold'
-                                                        : player.profitLoss <
-                                                          0
-                                                        ? 'text-red-600 font-semibold'
-                                                        : ''
-                                                }
-                                            >
-                                                {player.profitLoss > 0
-                                                    ? '+'
-                                                    : ''}
-                                                ₺
-                                                {player.profitLoss.toString()}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-
                     {/* Saved Settlement Results Table */}
                     {savedSettlement &&
                         savedSettlement.length > 0 && (
@@ -699,7 +675,7 @@ export default function SessionSettlement({
                                             <tr>
                                                 <th
                                                     scope="col"
-                                                    className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                    className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                                 >
                                                     {t(
                                                         'settlement.player'
@@ -735,13 +711,22 @@ export default function SessionSettlement({
                                             {savedSettlement.map(
                                                 (item) => (
                                                     <tr key={item.id}>
-                                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                                        <td className="px-2 sm:px-4 py-4 whitespace-nowrap">
                                                             <div className="text-sm font-medium text-gray-900">
-                                                                {
-                                                                    item
-                                                                        .user
-                                                                        .name
-                                                                }
+                                                                <span className="sm:hidden">
+                                                                    {abbreviateName(
+                                                                        item
+                                                                            .user
+                                                                            .name
+                                                                    )}
+                                                                </span>
+                                                                <span className="hidden sm:inline">
+                                                                    {
+                                                                        item
+                                                                            .user
+                                                                            .name
+                                                                    }
+                                                                </span>
                                                             </div>
                                                         </td>
                                                         <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
@@ -761,7 +746,9 @@ export default function SessionSettlement({
                                                                     ? '+'
                                                                     : ''}
                                                                 ₺
-                                                                {item.profitLoss.toString()}
+                                                                {formatNumber(
+                                                                    item.profitLoss
+                                                                )}
                                                             </span>
                                                         </td>
                                                         <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
@@ -769,11 +756,13 @@ export default function SessionSettlement({
                                                             0 ? (
                                                                 <span className="text-red-600 font-medium">
                                                                     -₺
-                                                                    {item.costShare.toString()}
+                                                                    {formatNumber(
+                                                                        item.costShare
+                                                                    )}
                                                                 </span>
                                                             ) : (
                                                                 <span className="text-gray-500">
-                                                                    ₺0.00
+                                                                    ₺0
                                                                 </span>
                                                             )}
                                                         </td>
@@ -794,7 +783,9 @@ export default function SessionSettlement({
                                                                     ? '+'
                                                                     : ''}
                                                                 ₺
-                                                                {item.finalProfit.toString()}
+                                                                {formatNumber(
+                                                                    item.finalProfit
+                                                                )}
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -819,16 +810,44 @@ export default function SessionSettlement({
                             {t('settlement.settlementDetails')}
                         </DialogTitle>
                         <DialogDescription>
-                            {t('settlement.sessionCostDistributed', {
-                                amount: `${sessionCost.toString()}`,
-                            })}
+                            {Number(discount) > 0 ? (
+                                <>
+                                    {t(
+                                        'settlement.sessionCostDistributed',
+                                        {
+                                            amount: `${formatNumber(
+                                                Number(sessionCost)
+                                            )}`,
+                                        }
+                                    )}
+                                    <br />
+                                    <span className="text-sm text-gray-600">
+                                        {t(
+                                            'settlement.discountAppliedToAll',
+                                            {
+                                                discount: `${discount}%`,
+                                            }
+                                        )}
+                                    </span>
+                                </>
+                            ) : (
+                                t(
+                                    'settlement.sessionCostDistributed',
+                                    {
+                                        amount: `${formatNumber(
+                                            Number(sessionCost)
+                                        )}`,
+                                    }
+                                )
+                            )}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 max-h-[70vh] overflow-y-auto py-4">
                         {sessionCost !== null &&
                             sessionCost !== '' &&
                             calculateSettlement(
-                                Number(sessionCost)
+                                Number(sessionCost),
+                                Number(discount) || 0
                             )?.map((item) => (
                                 <div
                                     key={item.id}
@@ -860,7 +879,53 @@ export default function SessionSettlement({
                                                     ? '+'
                                                     : ''}
                                                 ₺
-                                                {item.profitLoss.toString()}
+                                                {formatNumber(
+                                                    item.profitLoss
+                                                )}
+                                            </span>
+                                        </div>
+                                        {item.discountAmount > 0 && (
+                                            <div>
+                                                <span className="text-gray-500">
+                                                    {t(
+                                                        'settlement.discount'
+                                                    )}
+                                                    :
+                                                </span>
+                                                <span className="ml-1 font-medium text-orange-600">
+                                                    -₺
+                                                    {formatNumber(
+                                                        item.discountAmount
+                                                    )}
+                                                </span>
+                                            </div>
+                                        )}
+                                        <div>
+                                            <span className="text-gray-500">
+                                                {t(
+                                                    'settlement.afterDiscount'
+                                                )}
+                                                :
+                                            </span>
+                                            <span
+                                                className={`ml-1 font-medium ${
+                                                    item.adjustedProfitLoss >
+                                                    0
+                                                        ? 'text-green-600'
+                                                        : item.adjustedProfitLoss <
+                                                          0
+                                                        ? 'text-red-600'
+                                                        : ''
+                                                }`}
+                                            >
+                                                {item.adjustedProfitLoss >
+                                                0
+                                                    ? '+'
+                                                    : ''}
+                                                ₺
+                                                {formatNumber(
+                                                    item.adjustedProfitLoss
+                                                )}
                                             </span>
                                         </div>
                                         {item.costShare > 0 && (
@@ -873,7 +938,9 @@ export default function SessionSettlement({
                                                 </span>
                                                 <span className="ml-1 font-medium text-red-600">
                                                     -₺
-                                                    {item.costShare.toString()}
+                                                    {formatNumber(
+                                                        item.costShare
+                                                    )}
                                                 </span>
                                             </div>
                                         )}
@@ -899,7 +966,9 @@ export default function SessionSettlement({
                                                     ? '+'
                                                     : ''}
                                                 ₺
-                                                {item.finalProfit.toString()}
+                                                {formatNumber(
+                                                    item.finalProfit
+                                                )}
                                             </span>
                                         </div>
                                     </div>

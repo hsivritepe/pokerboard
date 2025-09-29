@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { formatNumber } from '@/lib/utils';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
@@ -333,7 +334,7 @@ export default function PlayerActions({
                             <div className="mb-2 text-sm text-gray-600">
                                 <p>
                                     Current stack: $
-                                    {currentStack.toFixed(2)}
+                                    {formatNumber(currentStack)}
                                 </p>
                                 {isLastPlayer &&
                                 requiredCashOut !== null ? (
@@ -424,7 +425,8 @@ export default function PlayerActions({
                         <DialogDescription>
                             {t('rejoinGame.description', {
                                 playerName,
-                                currentStack: currentStack.toFixed(2),
+                                currentStack:
+                                    formatNumber(currentStack),
                             })}
                         </DialogDescription>
                     </DialogHeader>
@@ -503,7 +505,7 @@ export default function PlayerActions({
                                 { playerName }
                             )}
                             {t('playerManagement.availableChips', {
-                                amount: currentStack.toFixed(2),
+                                amount: formatNumber(currentStack),
                             })}
                         </DialogDescription>
                     </DialogHeader>

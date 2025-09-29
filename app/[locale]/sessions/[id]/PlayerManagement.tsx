@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { User } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { formatNumber } from '@/lib/utils';
 import PlayerActions from './PlayerActions';
 
 interface PlayerSession {
@@ -327,7 +328,7 @@ export default function PlayerManagement({
                                         :
                                     </span>
                                     <span className="font-medium ml-1">
-                                        ₺{totalBuyIn.toString()}
+                                        ₺{formatNumber(totalBuyIn)}
                                     </span>
                                 </div>
                                 <div>
@@ -339,7 +340,9 @@ export default function PlayerManagement({
                                     </span>
                                     <span className="font-medium ml-1">
                                         ₺
-                                        {player.currentStack.toString()}
+                                        {formatNumber(
+                                            player.currentStack
+                                        )}
                                     </span>
                                 </div>
                                 <div>
@@ -481,11 +484,13 @@ export default function PlayerManagement({
                                         </span>
                                     </td>
                                     <td className="px-4 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ₺{totalBuyIn.toString()}
+                                        ₺{formatNumber(totalBuyIn)}
                                     </td>
                                     <td className="px-4 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-900">
                                         ₺
-                                        {player.currentStack.toString()}
+                                        {formatNumber(
+                                            player.currentStack
+                                        )}
                                     </td>
                                     <td className="px-4 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm">
                                         <span
@@ -497,7 +502,8 @@ export default function PlayerManagement({
                                                     : 'text-gray-900'
                                             }
                                         >
-                                            ₺{profitLoss.toString()}
+                                            ₺
+                                            {formatNumber(profitLoss)}
                                         </span>
                                     </td>
                                     {canManagePlayers && (

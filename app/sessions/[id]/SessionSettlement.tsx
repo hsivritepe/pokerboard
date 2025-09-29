@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/app/components/ui/toast-context';
+import { formatNumber } from '@/lib/utils';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
@@ -616,7 +617,8 @@ export default function SessionSettlement({
                             Settlement Details (with session cost)
                         </DialogTitle>
                         <DialogDescription>
-                            Session cost of ${sessionCost.toString()}{' '}
+                            Session cost of $
+                            {formatNumber(Number(sessionCost))}{' '}
                             distributed among winners
                         </DialogDescription>
                     </DialogHeader>

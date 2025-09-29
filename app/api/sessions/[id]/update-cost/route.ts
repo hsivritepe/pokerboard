@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { formatNumber } from '@/lib/utils';
 
 type UserWithAdmin = {
     id: string;
@@ -22,9 +23,9 @@ export async function POST(
             return new NextResponse('Unauthorized', { status: 401 });
         }
 
-        // Get the request body for session cost
+        // Get the request body for session cost and discount
         const body = await request.json();
-        const { sessionCost } = body;
+        const { sessionCost, discount } = body;
 
         // Validate sessionCost
         if (
@@ -35,6 +36,19 @@ export async function POST(
             return new NextResponse('Invalid session cost', {
                 status: 400,
             });
+        }
+
+        // Validate discount (optional)
+        if (
+            discount !== undefined &&
+            (isNaN(discount) || discount < 0 || discount > 100)
+        ) {
+            return new NextResponse(
+                'Invalid discount (must be between 0-100)',
+                {
+                    status: 400,
+                }
+            );
         }
 
         // Get user with all fields
@@ -65,16 +79,20 @@ export async function POST(
             return new NextResponse('Forbidden', { status: 403 });
         }
 
-        // Update the session cost
+        // Update the session cost and discount
         const updatedSession = await prisma.$executeRaw`
             UPDATE "GameSession"
-            SET "sessionCost" = ${sessionCost}
+            SET "sessionCost" = ${sessionCost}, "discount" = ${
+            discount || 0
+        }
             WHERE id = ${id}
         `;
 
         return NextResponse.json({
             messageKey: 'sessionCost.updated',
-            messageParams: { amount: `₺${sessionCost.toFixed(2)}` },
+            messageParams: {
+                amount: `₺${formatNumber(sessionCost)}`,
+            },
             sessionCost: sessionCost,
         });
     } catch (error) {

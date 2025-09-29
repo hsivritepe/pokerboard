@@ -10,11 +10,11 @@ async function main() {
         // Create admin user
         const adminPassword = await bcrypt.hash('admin123', 10);
         const admin = await prisma.user.upsert({
-            where: { email: 'admin@pokerboard.com' },
+            where: { email: 'hakan@sivritepe.com' },
             update: {},
             create: {
-                name: 'Admin User',
-                email: 'admin@pokerboard.com',
+                name: 'Hakan Sivritepe',
+                email: 'hakan@sivritepe.com',
                 password: adminPassword,
                 isAdmin: true,
             },
@@ -30,7 +30,6 @@ async function main() {
             { name: 'Gökhan Uzun', email: 'gokhan@uzun.com' },
             { name: 'Cengiz Aksu', email: 'cengiz@aksu.com' },
             { name: 'Tuğberk Özdemir', email: 'tugberk@ozdemir.com' },
-            { name: 'Hakan Sivritepe', email: 'hakan@sivritepe.com' },
             { name: 'Bülent Sezer', email: 'bulent@sezer.com' },
             { name: 'Armağan Uysal', email: 'armagan@uysal.com' },
             { name: 'Tolga Sivritepe', email: 'tolga@sivritepe.com' },
