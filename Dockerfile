@@ -17,11 +17,12 @@ COPY . .
 # Build the application
 RUN npm run build
 
+# Copy startup script
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
 # Expose port 3000
 EXPOSE 3000
-
-# Create startup script
-RUN echo '#!/bin/sh\nnpx prisma migrate deploy\nnpm start' > /app/start.sh && chmod +x /app/start.sh
 
 # Start the production server
 CMD ["/app/start.sh"]
