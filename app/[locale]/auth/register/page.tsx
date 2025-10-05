@@ -1,23 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { signIn } from 'next-auth/react';
-import {
-    useRouter,
-    useSearchParams,
-    useParams,
-} from 'next/navigation';
+import { useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
 type ValidationErrors = {
+    name?: string;
     email?: string;
     password?: string;
+    confirmPassword?: string;
 };
 
-export default function SignIn() {
+export default function Register() {
     const router = useRouter();
-    const searchParams = useSearchParams();
     const params = useParams();
     const locale = params.locale as string;
     const t = useTranslations();
@@ -25,30 +21,20 @@ export default function SignIn() {
     const [validationErrors, setValidationErrors] =
         useState<ValidationErrors>({});
     const [isLoading, setIsLoading] = useState(false);
-    const [showSuccessMessage, setShowSuccessMessage] =
-        useState(false);
-
-    useEffect(() => {
-        try {
-            const params = searchParams;
-            if (!params) return;
-
-            if (
-                params.get('registered') === 'true' ||
-                params.get('reset') === 'true'
-            ) {
-                setShowSuccessMessage(true);
-                setTimeout(() => setShowSuccessMessage(false), 5000);
-            }
-        } catch (error) {
-            console.error('Error handling URL parameters:', error);
-        }
-    }, [searchParams]);
 
     const validateForm = (formData: FormData): boolean => {
         const errors: ValidationErrors = {};
+        const name = formData.get('name') as string;
         const email = formData.get('email') as string;
         const password = formData.get('password') as string;
+        const confirmPassword = formData.get(
+            'confirmPassword'
+        ) as string;
+
+        // Name validation
+        if (name.length < 2) {
+            errors.name = t('auth.nameRequired');
+        }
 
         // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -57,8 +43,13 @@ export default function SignIn() {
         }
 
         // Password validation
-        if (password.length < 1) {
-            errors.password = t('auth.passwordRequired');
+        if (password.length < 6) {
+            errors.password = t('auth.passwordMinLength');
+        }
+
+        // Confirm password validation
+        if (password !== confirmPassword) {
+            errors.confirmPassword = t('auth.passwordsDoNotMatch');
         }
 
         setValidationErrors(errors);
@@ -78,26 +69,33 @@ export default function SignIn() {
 
         setIsLoading(true);
 
-        const email = formData.get('email') as string;
-        const password = formData.get('password') as string;
-
         try {
-            const result = await signIn('credentials', {
-                email,
-                password,
-                redirect: false,
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    password: formData.get('password'),
+                }),
             });
 
-            if (result?.error) {
-                setError(t('auth.invalidEmailOrPassword'));
-                setIsLoading(false);
-                return;
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(
+                    errorData.error || 'Registration failed'
+                );
             }
 
-            router.push(`/${locale}/`);
-            router.refresh();
+            router.push(`/${locale}/auth/signin?registered=true`);
         } catch (error) {
-            setError(t('auth.errorDuringSignIn'));
+            setError(
+                error instanceof Error
+                    ? error.message
+                    : t('auth.errorDuringRegistration')
+            );
             setIsLoading(false);
         }
     }
@@ -106,36 +104,21 @@ export default function SignIn() {
         <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-                    {t('auth.signInToAccount')}
+                    {t('auth.createNewAccount')}
                 </h2>
                 <p className="mt-2 text-center text-sm text-gray-600">
                     {t('auth.or')}{' '}
                     <Link
-                        href={`/${locale}/auth/register`}
+                        href={`/${locale}/auth/signin`}
                         className="font-medium text-indigo-600 hover:text-indigo-500"
                     >
-                        {t('auth.createNewAccount')}
+                        {t('auth.signInToAccount')}
                     </Link>
                 </p>
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                    {showSuccessMessage && (
-                        <div className="rounded-md bg-green-50 p-4 mb-6">
-                            <div className="text-sm text-green-700">
-                                {searchParams?.get('registered') ===
-                                'true'
-                                    ? t(
-                                          'auth.accountCreatedSuccessfully'
-                                      )
-                                    : t(
-                                          'auth.passwordResetSuccessfully'
-                                      )}
-                            </div>
-                        </div>
-                    )}
-
                     <form
                         className="space-y-6"
                         onSubmit={handleSubmit}
@@ -147,6 +130,34 @@ export default function SignIn() {
                                 </div>
                             </div>
                         )}
+
+                        <div>
+                            <label
+                                htmlFor="name"
+                                className="block text-sm font-medium text-gray-700"
+                            >
+                                {t('auth.fullName')}
+                            </label>
+                            <div className="mt-1">
+                                <input
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    autoComplete="name"
+                                    required
+                                    className={`block w-full appearance-none rounded-md border ${
+                                        validationErrors.name
+                                            ? 'border-red-300'
+                                            : 'border-gray-300'
+                                    } px-3 py-2 placeholder-gray-400 text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500`}
+                                />
+                                {validationErrors.name && (
+                                    <p className="mt-1 text-sm text-red-600">
+                                        {validationErrors.name}
+                                    </p>
+                                )}
+                            </div>
+                        </div>
 
                         <div>
                             <label
@@ -188,7 +199,7 @@ export default function SignIn() {
                                     id="password"
                                     name="password"
                                     type="password"
-                                    autoComplete="current-password"
+                                    autoComplete="new-password"
                                     required
                                     className={`block w-full appearance-none rounded-md border ${
                                         validationErrors.password
@@ -202,13 +213,35 @@ export default function SignIn() {
                                     </p>
                                 )}
                             </div>
-                            <div className="mt-2 text-right">
-                                <Link
-                                    href={`/${locale}/auth/forgot-password`}
-                                    className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                                >
-                                    {t('auth.forgotPassword')}
-                                </Link>
+                        </div>
+
+                        <div>
+                            <label
+                                htmlFor="confirmPassword"
+                                className="block text-sm font-medium text-gray-700"
+                            >
+                                {t('auth.confirmPassword')}
+                            </label>
+                            <div className="mt-1">
+                                <input
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    type="password"
+                                    autoComplete="new-password"
+                                    required
+                                    className={`block w-full appearance-none rounded-md border ${
+                                        validationErrors.confirmPassword
+                                            ? 'border-red-300'
+                                            : 'border-gray-300'
+                                    } px-3 py-2 placeholder-gray-400 text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500`}
+                                />
+                                {validationErrors.confirmPassword && (
+                                    <p className="mt-1 text-sm text-red-600">
+                                        {
+                                            validationErrors.confirmPassword
+                                        }
+                                    </p>
+                                )}
                             </div>
                         </div>
 
@@ -219,8 +252,8 @@ export default function SignIn() {
                                 className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isLoading
-                                    ? t('common.signingIn')
-                                    : t('common.signIn')}
+                                    ? t('common.creating')
+                                    : t('auth.createAccount')}
                             </button>
                         </div>
                     </form>
