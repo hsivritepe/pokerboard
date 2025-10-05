@@ -62,7 +62,11 @@
         "sessions": "Sessions",
         "settlements": "Settlements",
         "players": "Players",
-        "pokerBoard": "PokerBoard"
+        "pokerBoard": "PokerBoard",
+        "signIn": "Sign In",
+        "signOut": "Sign Out",
+        "theme": "Theme",
+        "language": "Language"
     },
     "home": {
         "welcome": "Welcome to PokerBoard",
@@ -118,7 +122,8 @@
         "totalBuyIns": "Total Buy-ins",
         "totalCashOut": "Total Cash Out",
         "totalProfit": "Total Profit",
-        "totalLoss": "Total Loss"
+        "totalLoss": "Total Loss",
+        "endSession": "End Session"
     },
     "playerManagement": {
         "players": "Players",

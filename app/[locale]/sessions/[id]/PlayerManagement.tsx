@@ -99,7 +99,9 @@ export default function PlayerManagement({
     const handleAddPlayer = async () => {
         if (!selectedUserId || buyInAmount < minimumBuyIn) {
             setError(
-                `Please select a player and enter a buy-in amount of at least ₺${minimumBuyIn}`
+                `Please select a player and enter a buy-in amount of at least ₺${formatNumber(
+                    minimumBuyIn
+                )}`
             );
             return;
         }
@@ -358,7 +360,7 @@ export default function PlayerManagement({
                                                 : ''
                                         }`}
                                     >
-                                        ₺{profitLoss.toString()}
+                                        ₺{formatNumber(profitLoss)}
                                     </span>
                                 </div>
 

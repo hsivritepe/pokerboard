@@ -5,6 +5,7 @@ import { authOptions } from '@/app/lib/auth';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { format } from 'date-fns';
+import { tr } from 'date-fns/locale';
 import { SessionStatus } from '@prisma/client';
 import { getTranslations } from 'next-intl/server';
 import { formatNumber } from '@/lib/utils';
@@ -118,7 +119,8 @@ export default async function SessionDetailPage({ params }: Props) {
                                 </span>{' '}
                                 {format(
                                     new Date(gameSession.date),
-                                    'PPP'
+                                    'PPP',
+                                    { locale: tr }
                                 )}
                             </div>
                             <div>

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { Fragment } from 'react';
@@ -22,6 +23,7 @@ const languages = [
 ];
 
 export function SimpleNavigation() {
+    const t = useTranslations();
     const pathname = usePathname();
     const { data: session } = useSession();
 
@@ -34,17 +36,17 @@ export function SimpleNavigation() {
     // Navigation items - use locale-aware URLs
     const navigation = [
         {
-            name: 'Home',
+            name: t('navigation.home'),
             href: isLocaleRoute ? `/${currentLocale}` : '/en',
         },
         {
-            name: 'Sessions',
+            name: t('navigation.sessions'),
             href: isLocaleRoute
                 ? `/${currentLocale}/sessions`
                 : '/en/sessions',
         },
         {
-            name: 'Settlements',
+            name: t('navigation.settlements'),
             href: isLocaleRoute
                 ? `/${currentLocale}/settlements`
                 : '/en/settlements',
@@ -54,7 +56,7 @@ export function SimpleNavigation() {
     // Add admin navigation if user is admin
     if (session?.user?.isAdmin) {
         navigation.push({
-            name: 'Players',
+            name: t('navigation.players'),
             href: isLocaleRoute
                 ? `/${currentLocale}/players`
                 : '/en/players',
@@ -85,7 +87,7 @@ export function SimpleNavigation() {
                                         }
                                         className="text-xl font-bold text-gray-900"
                                     >
-                                        PokerBoard
+                                        {t('navigation.pokerBoard')}
                                     </Link>
                                 </div>
                                 <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
@@ -98,7 +100,9 @@ export function SimpleNavigation() {
                                                 pathname ===
                                                     item.href ||
                                                     (item.name ===
-                                                        'Home' &&
+                                                        t(
+                                                            'navigation.home'
+                                                        ) &&
                                                         (pathname ===
                                                             '/en' ||
                                                             pathname ===
@@ -222,7 +226,9 @@ export function SimpleNavigation() {
                                                                 'block w-full px-4 py-2 text-left text-sm text-gray-700'
                                                             )}
                                                         >
-                                                            Sign Out
+                                                            {t(
+                                                                'navigation.signOut'
+                                                            )}
                                                         </button>
                                                     )}
                                                 </Menu.Item>
@@ -238,7 +244,7 @@ export function SimpleNavigation() {
                                         }
                                         className="text-gray-600 hover:text-gray-900"
                                     >
-                                        Sign In
+                                        {t('navigation.signIn')}
                                     </Link>
                                 )}
                             </div>
@@ -273,7 +279,10 @@ export function SimpleNavigation() {
                                     className={clsx(
                                         'block border-l-4 py-2 pl-3 pr-4 text-base font-medium',
                                         pathname === item.href ||
-                                            (item.name === 'Home' &&
+                                            (item.name ===
+                                                t(
+                                                    'navigation.home'
+                                                ) &&
                                                 (pathname === '/en' ||
                                                     pathname === '/'))
                                             ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
@@ -288,7 +297,7 @@ export function SimpleNavigation() {
                             {/* Mobile Theme Toggle */}
                             <div className="px-4 py-2">
                                 <p className="text-sm font-medium text-gray-500 mb-2">
-                                    Theme
+                                    {t('navigation.theme')}
                                 </p>
                                 <div className="flex justify-center">
                                     <ThemeToggle />
@@ -298,7 +307,7 @@ export function SimpleNavigation() {
                             {/* Mobile Language Switcher */}
                             <div className="px-4 py-2">
                                 <p className="text-sm font-medium text-gray-500 mb-2">
-                                    Language
+                                    {t('navigation.language')}
                                 </p>
                                 <div className="flex flex-wrap gap-2">
                                     {languages.map((language) => (
@@ -331,7 +340,7 @@ export function SimpleNavigation() {
                                         onClick={() => signOut()}
                                         className="block w-full px-4 py-2 text-left text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                                     >
-                                        Sign Out
+                                        {t('navigation.signOut')}
                                     </button>
                                 </div>
                             ) : (
@@ -345,7 +354,7 @@ export function SimpleNavigation() {
                                         }
                                         className="block px-4 py-2 text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                                     >
-                                        Sign In
+                                        {t('navigation.signIn')}
                                     </Disclosure.Button>
                                 </div>
                             )}

@@ -497,7 +497,7 @@ export default function SessionSettlement({
                                         )
                                     }
                                     className="pl-5 h-9 text-sm"
-                                    placeholder="0.00"
+                                    placeholder="0"
                                 />
                             </div>
                         </div>
@@ -556,7 +556,7 @@ export default function SessionSettlement({
                                 {t('settlement.totalBuyIns')}
                             </h3>
                             <p className="text-lg font-semibold">
-                                ₺{totalBuyIns.toString()}
+                                ₺{formatNumber(totalBuyIns)}
                             </p>
                         </div>
                         <div className="bg-green-50 p-3 rounded-lg">
@@ -564,7 +564,7 @@ export default function SessionSettlement({
                                 {t('settlement.totalCashOut')}
                             </h3>
                             <p className="text-lg font-semibold">
-                                ₺{totalCashOut.toString()}
+                                ₺{formatNumber(totalCashOut)}
                             </p>
                         </div>
                         <div className="bg-green-50 p-3 rounded-lg">
@@ -572,7 +572,7 @@ export default function SessionSettlement({
                                 {t('settlement.totalProfit')}
                             </h3>
                             <p className="text-lg font-semibold">
-                                ₺{totalProfit.toString()}
+                                ₺{formatNumber(totalProfit)}
                             </p>
                         </div>
                         <div className="bg-red-50 p-3 rounded-lg">
@@ -580,7 +580,7 @@ export default function SessionSettlement({
                                 {t('settlement.totalLoss')}
                             </h3>
                             <p className="text-lg font-semibold">
-                                ₺{totalLoss.toString()}
+                                ₺{formatNumber(totalLoss)}
                             </p>
                         </div>
                     </div>

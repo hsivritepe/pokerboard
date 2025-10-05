@@ -349,7 +349,7 @@ export default function SessionSettlement({
                                         )
                                     }
                                     className="pl-5 h-9 text-sm"
-                                    placeholder="0.00"
+                                    placeholder="0"
                                 />
                             </div>
                         </div>

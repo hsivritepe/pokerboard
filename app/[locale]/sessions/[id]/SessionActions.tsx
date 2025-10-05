@@ -117,7 +117,7 @@ export default function SessionActions({
                     disabled={isLoading}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"
                 >
-                    End Session
+                    {t('sessionDetail.endSession')}
                 </button>
             )}
 

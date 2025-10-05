@@ -1,5 +1,6 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import { SimpleNavigation } from '@/components/SimpleNavigation';
 
 export const metadata = {
     title: 'PokerBoard',
@@ -19,6 +20,7 @@ export default async function LocaleLayout({
 
     return (
         <NextIntlClientProvider messages={messages}>
+            <SimpleNavigation />
             {children}
         </NextIntlClientProvider>
     );

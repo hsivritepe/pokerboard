@@ -2,7 +2,6 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import { ToastProvider } from './components/ui/toast-context';
-import { SimpleNavigation } from '@/components/SimpleNavigation';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -28,10 +27,7 @@ export default function RootLayout({
                     disableTransitionOnChange
                 >
                     <AuthProvider>
-                        <ToastProvider>
-                            <SimpleNavigation />
-                            {children}
-                        </ToastProvider>
+                        <ToastProvider>{children}</ToastProvider>
                     </AuthProvider>
                 </ThemeProvider>
             </body>

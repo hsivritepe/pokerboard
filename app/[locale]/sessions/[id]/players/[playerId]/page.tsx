@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
+import { formatNumber } from '@/lib/utils';
 import { Button } from '@/app/components/ui/button';
 import {
     Card,
@@ -191,7 +192,10 @@ export default function PlayerDetailPage({ params }: Props) {
                                 Buy-in:
                             </span>{' '}
                             <span className="font-medium text-gray-900">
-                                ₺{playerSession.session.buyIn}
+                                ₺
+                                {formatNumber(
+                                    playerSession.session.buyIn
+                                )}
                             </span>
                         </div>
                         <div>
@@ -403,7 +407,8 @@ export default function PlayerDetailPage({ params }: Props) {
                                             Total Buy-in
                                         </span>
                                         <span className="font-medium text-gray-900">
-                                            ₺{totalBuyIn}
+                                            ₺
+                                            {formatNumber(totalBuyIn)}
                                         </span>
                                     </div>
                                     {playerSession.status ===
@@ -438,7 +443,12 @@ export default function PlayerDetailPage({ params }: Props) {
                                                 {netProfit >= 0
                                                     ? '+'
                                                     : ''}{' '}
-                                                ₺{Math.abs(netProfit)}
+                                                ₺
+                                                {formatNumber(
+                                                    Math.abs(
+                                                        netProfit
+                                                    )
+                                                )}
                                             </span>
                                         ) : (
                                             <span className="text-gray-700 italic">

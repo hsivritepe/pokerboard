@@ -346,9 +346,9 @@ export default function PlayerActions({
                                             with:
                                         </p>
                                         <p className="text-yellow-700 font-bold text-lg mt-1">
-                                            $
-                                            {requiredCashOut.toFixed(
-                                                2
+                                            ₺
+                                            {formatNumber(
+                                                requiredCashOut
                                             )}
                                         </p>
                                     </div>

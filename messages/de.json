@@ -61,7 +61,11 @@
         "sessions": "Sitzungen",
         "settlements": "Abrechnungen",
         "players": "Spieler",
-        "pokerBoard": "PokerBoard"
+        "pokerBoard": "PokerBoard",
+        "signIn": "Anmelden",
+        "signOut": "Abmelden",
+        "theme": "Design",
+        "language": "Sprache"
     },
     "home": {
         "welcome": "Willkommen bei PokerBoard",
@@ -98,6 +102,16 @@
         "clearSelection": "Auswahl löschen",
         "addSelected": "Ausgewählte hinzufügen",
         "pleaseSelectAtLeastOnePlayer": "Bitte wählen Sie mindestens einen Spieler aus"
+    },
+    "sessionDetail": {
+        "title": "Spielsitzung Details",
+        "basicInformation": "Grundlegende Informationen",
+        "minimumBuyIn": "Mindest-Einsatz",
+        "totalBuyIns": "Gesamte Einsätze",
+        "totalCashOut": "Gesamte Auszahlungen",
+        "totalProfit": "Gesamtgewinn",
+        "totalLoss": "Gesamtverlust",
+        "endSession": "Sitzung beenden"
     },
     "status": {
         "ongoing": "LAUFEND",

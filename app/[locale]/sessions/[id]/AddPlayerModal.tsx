@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { formatNumber } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { Combobox } from '@headlessui/react';
 import {
@@ -79,7 +80,11 @@ export default function AddPlayerModal({
         }
 
         if (!buyInAmount || parseFloat(buyInAmount) < minimumBuyIn) {
-            alert(`Minimum buy-in amount is ₺${minimumBuyIn}`);
+            alert(
+                `Minimum buy-in amount is ₺${formatNumber(
+                    minimumBuyIn
+                )}`
+            );
             return;
         }
 
@@ -130,7 +135,11 @@ export default function AddPlayerModal({
         }
 
         if (!buyInAmount || parseFloat(buyInAmount) < minimumBuyIn) {
-            alert(`Minimum buy-in amount is ₺${minimumBuyIn}`);
+            alert(
+                `Minimum buy-in amount is ₺${formatNumber(
+                    minimumBuyIn
+                )}`
+            );
             return;
         }
 
@@ -408,7 +417,8 @@ export default function AddPlayerModal({
                             />
                         </div>
                         <p className="mt-1 text-sm text-gray-500">
-                            Minimum buy-in: ₺{minimumBuyIn}
+                            Minimum buy-in: ₺
+                            {formatNumber(minimumBuyIn)}
                         </p>
                     </div>
 

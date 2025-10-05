@@ -62,7 +62,11 @@
         "sessions": "Oturumlar",
         "settlements": "Hesaplamalar",
         "players": "Oyuncular",
-        "pokerBoard": "PokerBoard"
+        "pokerBoard": "PokerBoard",
+        "signIn": "Giriş Yap",
+        "signOut": "Çıkış Yap",
+        "theme": "Tema",
+        "language": "Dil"
     },
     "home": {
         "welcome": "PokerBoard'a hoş geldiniz",
@@ -118,7 +122,8 @@
         "totalBuyIns": "Toplam Girişler",
         "totalCashOut": "Toplam Çıkışlar",
         "totalProfit": "Toplam Kar",
-        "totalLoss": "Toplam Zarar"
+        "totalLoss": "Toplam Zarar",
+        "endSession": "Oturumu Sonlandır"
     },
     "playerManagement": {
         "players": "Oyuncular",
