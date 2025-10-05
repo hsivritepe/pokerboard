@@ -14,11 +14,11 @@ RUN npm install
 # Copy the rest of the application
 COPY . .
 
+# Build the application
+RUN npm run build
+
 # Expose port 3000
 EXPOSE 3000
 
-# Set environment variable
-ENV DATABASE_URL=postgresql://postgres:postgres@db:5432/pokerboard
-
-# Start the development server
-CMD ["npm", "run", "dev"]
+# Start the production server
+CMD ["npm", "start"]
