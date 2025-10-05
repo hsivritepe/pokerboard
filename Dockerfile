@@ -20,5 +20,8 @@ RUN npm run build
 # Expose port 3000
 EXPOSE 3000
 
+# Create startup script
+RUN echo '#!/bin/sh\nnpx prisma migrate deploy\nnpm start' > /app/start.sh && chmod +x /app/start.sh
+
 # Start the production server
-CMD ["npm", "start"]
+CMD ["/app/start.sh"]
