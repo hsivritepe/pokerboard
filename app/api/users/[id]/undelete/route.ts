@@ -6,18 +6,20 @@ import { Prisma } from '@prisma/client';
 
 export async function POST(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         console.log(
             'Undelete request received for user ID:',
-            params.id
+            'will be extracted from params'
         );
 
         const session = await getServerSession(authOptions);
         if (!session?.user?.email) {
             return new NextResponse('Unauthorized', { status: 401 });
         }
+
+        const { id } = await params;
 
         // Check if the user is an admin
         const currentUser = await prisma.user.findUnique({
@@ -34,7 +36,7 @@ export async function POST(
 
         // Check if user exists
         const userToUndelete = await prisma.user.findUnique({
-            where: { id: params.id },
+            where: { id: id },
             select: {
                 id: true,
                 isDeleted: true,
@@ -59,10 +61,10 @@ export async function POST(
                 UPDATE "User"
                 SET "isDeleted" = false,
                     "deletedAt" = NULL
-                WHERE id = ${params.id}
+                WHERE id = ${id}
             `;
 
-            console.log('Undelete successful for user:', params.id);
+            console.log('Undelete successful for user:', id);
             return new NextResponse(null, { status: 204 });
         } catch (error) {
             console.error('Database error:', error);

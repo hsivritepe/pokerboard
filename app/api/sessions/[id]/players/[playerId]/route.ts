@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(
     request: Request,
-    { params }: { params: { id: string; playerId: string } }
+    { params }: { params: Promise<{ id: string; playerId: string }> }
 ) {
     try {
         const session = await getServerSession(authOptions);
@@ -26,9 +26,11 @@ export async function GET(
             });
         }
 
+        const { id, playerId } = await params;
+
         // Get the player session with related data
         const playerSession = await prisma.playerSession.findUnique({
-            where: { id: params.playerId },
+            where: { id: playerId },
             include: {
                 user: {
                     select: {
@@ -44,7 +46,6 @@ export async function GET(
                         location: true,
                         status: true,
                         hostId: true,
-                        gameType: true,
                         buyIn: true,
                         host: {
                             select: {

@@ -6,18 +6,20 @@ import { Prisma } from '@prisma/client';
 
 export async function DELETE(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         console.log(
             'Delete request received for user ID:',
-            params.id
+            'will be extracted from params'
         );
 
         const session = await getServerSession(authOptions);
         if (!session?.user?.email) {
             return new NextResponse('Unauthorized', { status: 401 });
         }
+
+        const { id } = await params;
 
         // Check if the user is an admin
         const currentUser = await prisma.user.findUnique({
@@ -34,7 +36,7 @@ export async function DELETE(
 
         // Check if user exists and get their sessions
         const userToDelete = await prisma.user.findUnique({
-            where: { id: params.id },
+            where: { id: id },
             select: {
                 id: true,
                 name: true,
@@ -86,13 +88,10 @@ export async function DELETE(
                 UPDATE "User"
                 SET "isDeleted" = true,
                     "deletedAt" = NOW()
-                WHERE id = ${params.id}
+                WHERE id = ${id}
             `;
 
-            console.log(
-                'Soft delete successful for user:',
-                params.id
-            );
+            console.log('Soft delete successful for user:', id);
             return new NextResponse(null, { status: 204 });
         } catch (error) {
             console.error('Database error:', error);
@@ -122,7 +121,7 @@ export async function DELETE(
 
 export async function GET(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const session = await getServerSession(authOptions);
@@ -130,6 +129,8 @@ export async function GET(
         if (!session?.user?.email) {
             return new NextResponse('Unauthorized', { status: 401 });
         }
+
+        const { id } = await params;
 
         // Check if the user is an admin
         const currentUser = await prisma.user.findUnique({
@@ -146,7 +147,7 @@ export async function GET(
 
         // Get the player with their sessions
         const player = await prisma.user.findUnique({
-            where: { id: params.id },
+            where: { id: id },
             select: {
                 id: true,
                 name: true,

@@ -6,7 +6,7 @@ import { TransactionType } from '@prisma/client';
 
 export async function POST(
     request: Request,
-    { params }: { params: { id: string; playerId: string } }
+    { params }: { params: Promise<{ id: string; playerId: string }> }
 ) {
     try {
         const session = await getServerSession(authOptions);
@@ -14,6 +14,8 @@ export async function POST(
         if (!session?.user?.email) {
             return new NextResponse('Unauthorized', { status: 401 });
         }
+
+        const { id, playerId } = await params;
 
         const currentUser = await prisma.user.findUnique({
             where: { email: session.user.email },
@@ -25,7 +27,7 @@ export async function POST(
         }
 
         const playerSession = await prisma.playerSession.findUnique({
-            where: { id: params.playerId },
+            where: { id: playerId },
             include: {
                 session: true,
                 user: true,
@@ -79,7 +81,7 @@ export async function POST(
             // Update player's stack and status
             const updatedPlayerSession =
                 await tx.playerSession.update({
-                    where: { id: params.playerId },
+                    where: { id: playerId },
                     data: {
                         currentStack: {
                             decrement: amount,

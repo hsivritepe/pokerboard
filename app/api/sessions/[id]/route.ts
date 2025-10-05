@@ -52,9 +52,12 @@ export async function GET(
         }
 
         // Get the session cost and discount using a raw query
-        const sessionCostResult = await prisma.$queryRaw`
+        const sessionCostResult = (await prisma.$queryRaw`
             SELECT "sessionCost", "discount" FROM "GameSession" WHERE id = ${id}
-        `;
+        `) as Array<{
+            sessionCost: number | null;
+            discount: number | null;
+        }>;
 
         // Add the session cost and discount to the response
         const sessionWithCost = {

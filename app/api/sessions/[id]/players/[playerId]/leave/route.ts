@@ -14,12 +14,11 @@ type UserWithAdmin = {
 
 export async function POST(
     request: Request,
-    context: { params: { id: string; playerId: string } }
+    context: { params: Promise<{ id: string; playerId: string }> }
 ) {
     try {
         const session = await getServerSession(authOptions);
-        const id = context.params.id;
-        const playerId = context.params.playerId;
+        const { id, playerId } = await context.params;
 
         if (!session?.user?.email) {
             return new NextResponse('Unauthorized', { status: 401 });

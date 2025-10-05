@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
 
 export async function POST(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const session = await getServerSession(authOptions);
@@ -13,6 +13,8 @@ export async function POST(
         if (!session?.user?.email) {
             return new NextResponse('Unauthorized', { status: 401 });
         }
+
+        const { id } = await params;
 
         // Check if the user is an admin
         const currentUser = await prisma.user.findUnique({
@@ -29,7 +31,7 @@ export async function POST(
 
         // Check if user exists and is deleted
         const user = await prisma.user.findUnique({
-            where: { id: params.id },
+            where: { id: id },
         });
 
         if (!user) {
@@ -46,7 +48,7 @@ export async function POST(
 
         // Restore the user
         await prisma.user.update({
-            where: { id: params.id },
+            where: { id: id },
             data: {
                 isDeleted: false,
                 deletedAt: null,

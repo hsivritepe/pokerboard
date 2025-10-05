@@ -6,7 +6,7 @@ import { SessionStatus, PlayerSession } from '@prisma/client';
 
 export async function PATCH(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const session = await getServerSession(authOptions);
@@ -24,8 +24,10 @@ export async function PATCH(
             return new NextResponse('Unauthorized', { status: 401 });
         }
 
+        const { id } = await params;
+
         const gameSession = await prisma.gameSession.findUnique({
-            where: { id: params.id },
+            where: { id: id },
             include: {
                 participants: true,
                 host: true,
@@ -73,7 +75,7 @@ export async function PATCH(
         }
 
         const updatedSession = await prisma.gameSession.update({
-            where: { id: params.id },
+            where: { id: id },
             data: { status: newStatus },
         });
 
