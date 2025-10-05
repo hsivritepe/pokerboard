@@ -12,11 +12,11 @@ type UserWithAdmin = {
 
 export async function GET(
     request: Request,
-    context: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
         const session = await getServerSession(authOptions);
-        const id = context.params.id;
+        const { id } = await context.params;
         const { searchParams } = new URL(request.url);
         const playerId = searchParams.get('playerId');
 

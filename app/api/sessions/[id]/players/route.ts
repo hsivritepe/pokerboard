@@ -10,10 +10,11 @@ import {
 
 export async function POST(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const session = await getServerSession(authOptions);
+        const { id } = await params;
 
         if (!session?.user?.email) {
             return new NextResponse('Unauthorized', { status: 401 });
@@ -28,7 +29,7 @@ export async function POST(
         }
 
         const gameSession = await prisma.gameSession.findUnique({
-            where: { id: params.id },
+            where: { id: id },
         });
 
         if (!gameSession) {
@@ -79,7 +80,7 @@ export async function POST(
         const existingPlayer = await prisma.playerSession.findFirst({
             where: {
                 userId,
-                sessionId: params.id,
+                sessionId: id,
                 status: 'ACTIVE',
             },
         });
@@ -99,7 +100,7 @@ export async function POST(
             const playerSession = await tx.playerSession.create({
                 data: {
                     userId,
-                    sessionId: params.id,
+                    sessionId: id,
                     initialBuyIn,
                     currentStack: initialBuyIn,
                     status: 'ACTIVE',
@@ -112,7 +113,7 @@ export async function POST(
                     amount: initialBuyIn,
                     type: TransactionType.BUY_IN,
                     userId,
-                    sessionId: params.id,
+                    sessionId: id,
                     playerSessionId: playerSession.id,
                 },
             });
