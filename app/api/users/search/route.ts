@@ -13,28 +13,43 @@ export async function GET(request: Request) {
 
         const { searchParams } = new URL(request.url);
         const query = searchParams.get('q');
+        const sessionId = searchParams.get('sessionId');
 
         if (!query) {
             return NextResponse.json([]);
         }
 
+        // Build the where clause
+        const whereClause: any = {
+            OR: [
+                {
+                    name: {
+                        contains: query,
+                        mode: 'insensitive',
+                    },
+                },
+                {
+                    email: {
+                        contains: query,
+                        mode: 'insensitive',
+                    },
+                },
+            ],
+        };
+
+        // If sessionId is provided, exclude users already in that session
+        if (sessionId) {
+            whereClause.NOT = {
+                playerSessions: {
+                    some: {
+                        sessionId: sessionId,
+                    },
+                },
+            };
+        }
+
         const users = await prisma.user.findMany({
-            where: {
-                OR: [
-                    {
-                        name: {
-                            contains: query,
-                            mode: 'insensitive',
-                        },
-                    },
-                    {
-                        email: {
-                            contains: query,
-                            mode: 'insensitive',
-                        },
-                    },
-                ],
-            },
+            where: whereClause,
             select: {
                 id: true,
                 name: true,

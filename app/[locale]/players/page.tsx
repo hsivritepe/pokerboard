@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, use } from 'react';
+import { useEffect, useState, use, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -23,6 +23,7 @@ import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
 import { useToast } from '@/app/components/ui/toast-context';
+import { generateEmailFromName } from '@/lib/utils';
 
 interface PlayerSession {
     id: string;
@@ -102,6 +103,7 @@ export default function PlayersPage({ params }: Props) {
     const [pagination, setPagination] =
         useState<PaginationInfo | null>(null);
     const { showToast } = useToast();
+    const emailManuallyChanged = useRef(false);
 
     useEffect(() => {
         if (status === 'loading') return;
@@ -151,6 +153,15 @@ export default function PlayersPage({ params }: Props) {
 
         fetchPlayers();
     }, [session, status, router, currentPage]);
+
+    // Auto-fill email when name changes
+    useEffect(() => {
+        if (newPlayerName.trim() && !emailManuallyChanged.current) {
+            const generatedEmail =
+                generateEmailFromName(newPlayerName);
+            setNewPlayerEmail(generatedEmail);
+        }
+    }, [newPlayerName]);
 
     const handleDeleteClick = (player: PlayerStats) => {
         setPlayerToDelete(player);
@@ -417,9 +428,13 @@ export default function PlayersPage({ params }: Props) {
                                 </label>
                             </div>
                             <Button
-                                onClick={() =>
-                                    setIsCreateModalOpen(true)
-                                }
+                                onClick={() => {
+                                    setIsCreateModalOpen(true);
+                                    setNewPlayerName('');
+                                    setNewPlayerEmail('');
+                                    emailManuallyChanged.current =
+                                        false;
+                                }}
                                 className="flex items-center gap-2"
                             >
                                 <PlusIcon className="h-5 w-5" />
@@ -681,9 +696,11 @@ export default function PlayersPage({ params }: Props) {
                                 id="email"
                                 type="email"
                                 value={newPlayerEmail}
-                                onChange={(e) =>
-                                    setNewPlayerEmail(e.target.value)
-                                }
+                                onChange={(e) => {
+                                    setNewPlayerEmail(e.target.value);
+                                    emailManuallyChanged.current =
+                                        true;
+                                }}
                                 placeholder={t(
                                     'players.emailPlaceholder'
                                 )}

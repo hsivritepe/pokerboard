@@ -22,6 +22,22 @@ const languages = [
     { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
 ];
 
+// Helper function to get user initials
+function getUserInitials(name: string): string {
+    if (!name) return 'U';
+
+    const nameParts = name.trim().split(/\s+/);
+    if (nameParts.length === 0) return 'U';
+
+    const firstInitial = nameParts[0][0]?.toUpperCase() || '';
+    const lastInitial =
+        nameParts.length > 1
+            ? nameParts[nameParts.length - 1][0]?.toUpperCase() || ''
+            : '';
+
+    return firstInitial + lastInitial;
+}
+
 export function SimpleNavigation() {
     const t = useTranslations();
     const pathname = usePathname();
@@ -198,9 +214,10 @@ export function SimpleNavigation() {
                                                 Open user menu
                                             </span>
                                             <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                                                {session.user
-                                                    ?.name?.[0] ||
-                                                    'U'}
+                                                {getUserInitials(
+                                                    session.user
+                                                        ?.name || ''
+                                                )}
                                             </div>
                                         </Menu.Button>
                                         <Transition

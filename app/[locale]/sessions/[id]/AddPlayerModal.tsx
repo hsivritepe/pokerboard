@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { formatNumber } from '@/lib/utils';
+import { useState, useEffect, useRef } from 'react';
+import { formatNumber, generateEmailFromName } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { Combobox } from '@headlessui/react';
 import {
@@ -40,18 +40,28 @@ export default function AddPlayerModal({
     const [buyInAmount, setBuyInAmount] = useState<string>('');
     const [newPlayerName, setNewPlayerName] = useState('');
     const [newPlayerEmail, setNewPlayerEmail] = useState('');
+    const emailManuallyChanged = useRef(false);
 
     useEffect(() => {
-        // Load initial users list
-        fetchUsers('');
+        // Don't load users initially - wait for user to type
+        // fetchUsers('');
     }, []);
+
+    // Auto-fill email when name changes
+    useEffect(() => {
+        if (newPlayerName.trim() && !emailManuallyChanged.current) {
+            const generatedEmail =
+                generateEmailFromName(newPlayerName);
+            setNewPlayerEmail(generatedEmail);
+        }
+    }, [newPlayerName]);
 
     const fetchUsers = async (searchQuery: string) => {
         try {
             const response = await fetch(
                 `/api/users/search?q=${encodeURIComponent(
                     searchQuery
-                )}`
+                )}&sessionId=${encodeURIComponent(sessionId)}`
             );
             if (!response.ok)
                 throw new Error('Failed to fetch users');
@@ -251,7 +261,12 @@ export default function AddPlayerModal({
                                     ? 'bg-blue-600 text-white'
                                     : 'bg-gray-100 text-gray-700'
                             }`}
-                            onClick={() => setMode('create')}
+                            onClick={() => {
+                                setMode('create');
+                                setNewPlayerName('');
+                                setNewPlayerEmail('');
+                                emailManuallyChanged.current = false;
+                            }}
                         >
                             Quick Create
                         </button>
@@ -381,11 +396,13 @@ export default function AddPlayerModal({
                                 <input
                                     type="email"
                                     value={newPlayerEmail}
-                                    onChange={(e) =>
+                                    onChange={(e) => {
                                         setNewPlayerEmail(
                                             e.target.value
-                                        )
-                                    }
+                                        );
+                                        emailManuallyChanged.current =
+                                            true;
+                                    }}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                     placeholder="Optional email address"
                                 />

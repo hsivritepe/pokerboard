@@ -1,5 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 const prisma = new PrismaClient();
 
@@ -7,24 +7,35 @@ async function main() {
     console.log('🌱 Starting database seeding...');
 
     try {
-        // Create admin user
+        // Create admin users
         const adminPassword = await bcrypt.hash('admin123', 10);
-        const admin = await prisma.user.upsert({
-            where: { email: 'hakan@sivritepe.com' },
-            update: {},
-            create: {
-                name: 'Hakan Sivritepe',
-                email: 'hakan@sivritepe.com',
-                password: adminPassword,
-                isAdmin: true,
-            },
+        const admins = [
+            { name: 'Hakan Sivritepe', email: 'hakan@sivritepe.com' },
+            { name: 'Serkan Demirkol', email: 'serkan@demirkol.com' },
+        ];
+
+        for (const adminData of admins) {
+            const admin = await prisma.user.upsert({
+                where: { email: adminData.email },
+                update: {},
+                create: {
+                    name: adminData.name,
+                    email: adminData.email,
+                    password: adminPassword,
+                    isAdmin: true,
+                },
+            });
+            console.log('✅ Admin user created:', admin.email);
+        }
+
+        // Get the first admin for the sample session
+        const firstAdmin = await prisma.user.findUnique({
+            where: { email: admins[0].email },
         });
-        console.log('✅ Admin user created:', admin.email);
 
         // Create test players
         const players = [
             { name: 'Halil Zurnacı', email: 'halil@zurnaci.com' },
-            { name: 'Serkan Demirkol', email: 'serkan@demirkol.com' },
             { name: 'Murat Can', email: 'murat@can.com' },
             { name: 'Tolga Öz', email: 'tolga@oz.com' },
             { name: 'Gökhan Uzun', email: 'gokhan@uzun.com' },
@@ -65,7 +76,7 @@ async function main() {
                 status: 'COMPLETED',
                 buyIn: 40000,
                 sessionCost: 27700,
-                hostId: admin.id,
+                hostId: firstAdmin.id,
             },
         });
         console.log(

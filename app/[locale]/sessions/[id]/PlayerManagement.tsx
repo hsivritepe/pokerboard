@@ -74,9 +74,14 @@ export default function PlayerManagement({
                 }
                 const data = await response.json();
 
+                // Handle both response formats (admin with pagination vs non-admin array)
+                const usersArray = Array.isArray(data)
+                    ? data
+                    : data.users || [];
+
                 // Filter out users who are already in the session
                 const playerIds = players.map((p) => p.userId);
-                const availableUsers = data.filter(
+                const availableUsers = usersArray.filter(
                     (user: UserOption) => {
                         const isInSession = playerIds.includes(
                             user.id
