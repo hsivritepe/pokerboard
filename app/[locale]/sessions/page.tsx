@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState, use } from 'react';
 import Link from 'next/link';
 import { formatDistanceToNow, format } from 'date-fns';
+import { tr } from 'date-fns/locale';
 
 type Props = {
     params: Promise<{ locale: string }>;
@@ -147,7 +148,10 @@ export default function SessionsPage({ params }: Props) {
                                                             new Date(
                                                                 sessionItem.date
                                                             ),
-                                                            'PPP p'
+                                                            'PPP p',
+                                                            {
+                                                                locale: tr,
+                                                            }
                                                         )}
                                                     </p>
                                                     <p className="mt-1 text-xs text-gray-600">
@@ -158,6 +162,7 @@ export default function SessionsPage({ params }: Props) {
                                                             {
                                                                 addSuffix:
                                                                     true,
+                                                                locale: tr,
                                                             }
                                                         )}
                                                     </p>
