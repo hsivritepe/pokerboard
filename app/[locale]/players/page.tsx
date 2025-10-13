@@ -324,7 +324,7 @@ export default function PlayersPage({ params }: Props) {
 
     if (status === 'loading' || isLoading) {
         return (
-            <div className="container mx-auto px-4 py-8">
+            <div className="container mx-auto px-2 py-4">
                 <div className="bg-white rounded-lg shadow-md p-6">
                     <div className="animate-pulse">
                         <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
@@ -344,7 +344,7 @@ export default function PlayersPage({ params }: Props) {
 
     if (error) {
         return (
-            <div className="container mx-auto px-4 py-8">
+            <div className="container mx-auto px-2 py-4">
                 <div className="bg-white rounded-lg shadow-md p-6">
                     <h1 className="text-xl font-semibold text-red-600 mb-2">
                         {error}
@@ -396,7 +396,7 @@ export default function PlayersPage({ params }: Props) {
 
     return (
         <>
-            <div className="container mx-auto px-4 py-8">
+            <div className="container mx-auto px-2 py-4">
                 <div className="bg-white rounded-lg shadow-md">
                     <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
                         <div>

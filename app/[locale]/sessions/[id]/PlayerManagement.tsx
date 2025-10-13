@@ -170,11 +170,8 @@ export default function PlayerManagement({
     };
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-2">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
-                <h2 className="text-lg font-semibold">
-                    {t('playerManagement.players')}
-                </h2>
                 {canManagePlayers && (
                     <button
                         onClick={() => setIsAddingPlayer(true)}

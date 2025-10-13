@@ -463,11 +463,8 @@ export default function SessionSettlement({
             : [];
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-2">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
-                <h2 className="text-lg font-semibold">
-                    {t('settlement.title')}
-                </h2>
                 {(isHost || isAdmin) && (
                     <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                         <div className="flex space-x-2 items-center">

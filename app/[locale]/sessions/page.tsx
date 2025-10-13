@@ -70,7 +70,7 @@ export default function SessionsPage({ params }: Props) {
     if (status === 'loading' || loading) {
         return (
             <div className="min-h-screen bg-gray-100">
-                <div className="container mx-auto px-4 py-8">
+                <div className="container mx-auto px-2 py-4">
                     <div className="animate-pulse">
                         <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
                         <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
@@ -94,7 +94,7 @@ export default function SessionsPage({ params }: Props) {
                     </h1>
                     <Link
                         href={`/${locale}/sessions/new`}
-                        className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
+                        className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors text-center"
                     >
                         {t('common.createNewSession')}
                     </Link>

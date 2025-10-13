@@ -17,6 +17,8 @@ import type {
 import SessionActions from './SessionActions';
 import PlayerManagement from './PlayerManagement';
 import SessionSettlement from './SessionSettlement';
+import SessionAccordion from './SessionAccordion';
+import SavedResults from './SavedResults';
 
 type UserWithAdmin = User & {
     isAdmin: boolean;
@@ -89,9 +91,9 @@ export default async function SessionDetailPage({ params }: Props) {
         currentUser.isAdmin || gameSession.hostId === currentUser.id;
 
     return (
-        <div className="container mx-auto px-4 py-6 sm:py-8 max-w-7xl">
-            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-                <div className="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4">
+        <div className="container mx-auto px-2 py-3 sm:py-4 max-w-7xl">
+            <div className="bg-white rounded-lg shadow-md p-2 sm:p-3">
+                <div className="flex flex-col sm:flex-row justify-between items-start mb-3 gap-4">
                     <h1 className="text-xl sm:text-2xl font-bold">
                         {t('sessionDetail.title')}
                     </h1>
@@ -164,19 +166,57 @@ export default async function SessionDetailPage({ params }: Props) {
                         </div>
                     </div>
 
-                    <PlayerManagement
-                        sessionId={id} // Use resolved id
-                        players={gameSession.participants}
-                        isHost={gameSession.hostId === currentUser.id}
-                        isAdmin={currentUser.isAdmin}
-                        minimumBuyIn={gameSession.buyIn}
-                    />
-
-                    <SessionSettlement
-                        sessionId={id} // Use resolved id
-                        players={gameSession.participants}
-                        isHost={gameSession.hostId === currentUser.id}
-                        isAdmin={currentUser.isAdmin}
+                    <SessionAccordion
+                        sections={[
+                            {
+                                id: 'players',
+                                title: t('playerManagement.players'),
+                                content: (
+                                    <PlayerManagement
+                                        sessionId={id}
+                                        players={
+                                            gameSession.participants
+                                        }
+                                        isHost={
+                                            gameSession.hostId ===
+                                            currentUser.id
+                                        }
+                                        isAdmin={currentUser.isAdmin}
+                                        minimumBuyIn={
+                                            gameSession.buyIn
+                                        }
+                                    />
+                                ),
+                            },
+                            {
+                                id: 'calculations',
+                                title: t('settlement.title'),
+                                content: (
+                                    <SessionSettlement
+                                        sessionId={id}
+                                        players={
+                                            gameSession.participants
+                                        }
+                                        isHost={
+                                            gameSession.hostId ===
+                                            currentUser.id
+                                        }
+                                        isAdmin={currentUser.isAdmin}
+                                        isCompleted={
+                                            gameSession.status ===
+                                            'COMPLETED'
+                                        }
+                                    />
+                                ),
+                            },
+                            {
+                                id: 'saved-results',
+                                title: t('settlement.savedResults'),
+                                content: (
+                                    <SavedResults sessionId={id} />
+                                ),
+                            },
+                        ]}
                         isCompleted={
                             gameSession.status === 'COMPLETED'
                         }

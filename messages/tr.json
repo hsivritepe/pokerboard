@@ -205,7 +205,9 @@
         "playerName": "Oyuncu adı",
         "emailOptional": "E-posta (isteğe bağlı)",
         "emailPlaceholder": "oyuncu@ornek.com",
-        "nameRequired": "İsim *"
+        "nameRequired": "İsim *",
+        "showPlayers": "Oyuncuları Göster",
+        "hidePlayers": "Oyuncuları Gizle"
     },
     "settlement": {
         "title": "Hesaplama",
@@ -217,9 +219,15 @@
         "showSettlement": "Hesaplamayı Göster (maliyet ile)",
         "settlementDetails": "Hesaplama Detayları (oturum maliyeti ile)",
         "saveSettlement": "Hesaplamayı Kaydet",
+        "savedResults": "Kaydedilen Hesaplama Sonuçları",
+        "savedResultsDescription": "Bu bölümde kaydedilen hesaplama sonuçları görüntülenecek.",
+        "noSavedResults": "Henüz kaydedilen hesaplama sonucu bulunmuyor.",
+        "showCalculations": "Hesaplamaları Göster",
+        "hideCalculations": "Hesaplamaları Gizle",
         "lastPlayerCashOutRecommendation": "Son Oyuncu Çıkış Önerisi",
         "cashOut": "Çıkış",
         "profitLoss": "Kar/Zarar",
+        "costShare": "Maliyet Payı",
         "sessionCostDistributed": "₺{amount} oturum maliyeti kazananlar arasında dağıtıldı",
         "discountApplied": "Kazananların karlarına %{discount} indirim uygulandı",
         "discountAppliedToAll": "Tüm oyuncuların kar/zararlarına %{discount} indirim uygulandı",

@@ -13,7 +13,7 @@ export default function Home() {
 
     return (
         <div className="min-h-screen bg-gray-100">
-            <main className="container mx-auto px-4 py-8">
+            <main className="container mx-auto px-2 py-4">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-bold text-gray-900 mb-4">
                         {t('home.welcome')}
