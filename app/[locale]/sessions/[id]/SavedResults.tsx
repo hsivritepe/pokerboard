@@ -8,6 +8,10 @@ interface SavedResultsProps {
     sessionId: string;
 }
 
+interface TooltipState {
+    [key: string]: boolean;
+}
+
 export default function SavedResults({
     sessionId,
 }: SavedResultsProps) {
@@ -16,6 +20,7 @@ export default function SavedResults({
         any[] | null
     >(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [tooltips, setTooltips] = useState<TooltipState>({});
 
     useEffect(() => {
         const fetchSavedResults = async () => {
@@ -66,6 +71,13 @@ export default function SavedResults({
             )}`;
         }
         return name.substring(0, 4);
+    };
+
+    const toggleTooltip = (playerId: string) => {
+        setTooltips((prev) => ({
+            ...prev,
+            [playerId]: !prev[playerId],
+        }));
     };
 
     if (isLoading) {
@@ -121,10 +133,36 @@ export default function SavedResults({
                     {savedSettlement.map((item) => (
                         <tr key={item.id}>
                             <td className="px-2 sm:px-4 py-4 whitespace-nowrap">
-                                <div className="text-sm font-medium text-gray-900">
+                                <div className="text-sm font-medium text-gray-900 relative">
                                     <span className="sm:hidden">
-                                        {abbreviateName(
-                                            item.user.name
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                toggleTooltip(
+                                                    item.id
+                                                );
+                                            }}
+                                            onTouchStart={(e) => {
+                                                e.preventDefault();
+                                                toggleTooltip(
+                                                    item.id
+                                                );
+                                            }}
+                                            className="hover:text-blue-600 transition-colors select-none"
+                                            style={{
+                                                userSelect: 'none',
+                                                WebkitUserSelect:
+                                                    'none',
+                                            }}
+                                        >
+                                            {abbreviateName(
+                                                item.user.name
+                                            )}
+                                        </button>
+                                        {tooltips[item.id] && (
+                                            <div className="absolute top-0 left-0 bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg z-10 whitespace-nowrap">
+                                                {item.user.name}
+                                            </div>
                                         )}
                                     </span>
                                     <span className="hidden sm:inline">
