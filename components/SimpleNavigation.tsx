@@ -61,12 +61,6 @@ export function SimpleNavigation() {
                 ? `/${currentLocale}/sessions`
                 : '/en/sessions',
         },
-        {
-            name: t('navigation.settlements'),
-            href: isLocaleRoute
-                ? `/${currentLocale}/settlements`
-                : '/en/settlements',
-        },
     ];
 
     // Add admin navigation if user is admin
